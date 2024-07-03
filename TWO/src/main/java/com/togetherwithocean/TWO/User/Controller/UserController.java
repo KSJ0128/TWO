@@ -20,8 +20,10 @@ public class UserController {
     private final SmsDao smsDao;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, SmsUtil smsUtil, SmsDao smsDao) {
         this.userService = userService;
+        this.smsUtil = smsUtil;
+        this.smsDao = smsDao;
     }
 
     @PostMapping("/findEmail")

@@ -12,7 +12,7 @@ public class PostFindUserEmailReq {
     String verifyNumber;
 
     @Builder
-    public PostFindUserEmailReq(String realName, String phoneNumber, Long verifyNumber) {
+    public PostFindUserEmailReq(String realName, String phoneNumber, String verifyNumber) {
         this.realName = realName;
         this.phoneNumber = phoneNumber;
         this.verifyNumber = verifyNumber;
