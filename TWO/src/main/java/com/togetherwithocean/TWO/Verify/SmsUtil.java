@@ -32,7 +32,12 @@ public class SmsUtil {
         message.setTo(to);
         message.setText("[TWO] 본인 확인 인증번호는 " + verificationCode + "입니다.");
 
+        System.out.println(sendNumber);
+        System.out.println(to);
+        System.out.println(sendNumber.equals(to));
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        System.out.println(response);
+
         return response;
     }
 }

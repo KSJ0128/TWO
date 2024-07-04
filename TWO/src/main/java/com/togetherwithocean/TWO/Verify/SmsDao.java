@@ -15,8 +15,10 @@ public class SmsDao {
     private final StringRedisTemplate redisTemplate;
 
     public void createSmsCertification(String phone, String certificationNumber) {
+        System.out.println("여기까지는 오니?");
         redisTemplate.opsForValue()
                 .set(PREFIX + phone, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
+        System.out.println("여기까지 오니?");
     }
 
     public String getSmsCertification(String phone) {

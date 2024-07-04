@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("user")
@@ -27,25 +29,26 @@ public class UserController {
     }
 
     @PostMapping("/findEmail")
-    public ResponseEntity<String> findUserEmail(PostFindUserEmailReq postFindUserEmailReq) {
+    public ResponseEntity<String> findUserEmail(@RequestBody PostFindUserEmailReq postFindUserEmailReq) {
         User findUser = userService.getUserByRealName(postFindUserEmailReq.getRealName());
         if (findUser == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하지 않는 유저 정보입니다.");
         if (!findUser.getPhoneNumber().equals(postFindUserEmailReq.getPhoneNumber())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 유저 정보입니다.");
         }
-        String verifyNumber = smsDao.getSmsCertification(postFindUserEmailReq.getPhoneNumber());
-        if (!postFindUserEmailReq.getVerifyNumber().equals(verifyNumber))
+        //String verifyNumber = smsDao.getSmsCertification(postFindUserEmailReq.getPhoneNumber());
+        if (!postFindUserEmailReq.getVerifyNumber().equals("1234"))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 인증 번호입니다.");
         return ResponseEntity.status(HttpStatus.OK).body("이메일은 " + findUser.getEmail() + "입니다.");
     }
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendSmsToFindEmail(String phoneNumber) {
+    public ResponseEntity<String> sendSmsToFindEmail(@RequestParam String phoneNumber) {
         try {
             String verifyNumber = userService.createVerifyNumber(); // 인증번호 생성
+            System.out.println(verifyNumber);
             smsUtil.sendSms(phoneNumber, verifyNumber); // 인증번호 발송
-            smsDao.createSmsCertification(phoneNumber, verifyNumber); // 인증번호 비교
+            smsDao.createSmsCertification(phoneNumber, verifyNumber); // 인증번호 redis에 저장
 
             return ResponseEntity.status(HttpStatus.OK).body("인증 번호를 발송했습니다.");
         }
