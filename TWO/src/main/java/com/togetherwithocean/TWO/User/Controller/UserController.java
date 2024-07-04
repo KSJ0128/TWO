@@ -12,48 +12,40 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("user")
 public class UserController {
     private final UserService userService;
-    private final SmsUtil smsUtil;
     private final SmsDao smsDao;
 
     @Autowired
     public UserController(UserService userService, SmsUtil smsUtil, SmsDao smsDao) {
         this.userService = userService;
-        this.smsUtil = smsUtil;
         this.smsDao = smsDao;
     }
 
     @PostMapping("/findEmail")
     public ResponseEntity<String> findUserEmail(@RequestBody PostFindUserEmailReq postFindUserEmailReq) {
-        User findUser = userService.getUserByRealName(postFindUserEmailReq.getRealName());
+
+        User findUser = userService.getUserByRealName(postFindUserEmailReq.getRealName()); // 유저명으로 유저 조회
+
+        // DB 상에 해당 유저가 존재하는지 확인
         if (findUser == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하지 않는 유저 정보입니다.");
-        if (!findUser.getPhoneNumber().equals(postFindUserEmailReq.getPhoneNumber())) {
+
+        // DB 상의 유저 정보와 일치하는지 확인 - 유저명과 유저 번호가 같은 유저 가리키는지
+        if (!findUser.getPhoneNumber().equals(postFindUserEmailReq.getPhoneNumber()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 유저 정보입니다.");
-        }
-        //String verifyNumber = smsDao.getSmsCertification(postFindUserEmailReq.getPhoneNumber());
-        if (!postFindUserEmailReq.getVerifyNumber().equals("1234"))
+
+        // redis에서 키 값에 해당하는 전화번호 통해 생성된 인증번호 불러옴
+        String verifyNumber = smsDao.getSmsCertification(postFindUserEmailReq.getPhoneNumber());
+
+        // 유저가 입력한 인증번호와 redis 상의 인증번호 대조
+        if (!postFindUserEmailReq.getVerifyNumber().equals(verifyNumber))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 인증 번호입니다.");
+
         return ResponseEntity.status(HttpStatus.OK).body("이메일은 " + findUser.getEmail() + "입니다.");
-    }
-
-    @PostMapping("/send")
-    public ResponseEntity<String> sendSmsToFindEmail(@RequestParam String phoneNumber) {
-        try {
-            String verifyNumber = userService.createVerifyNumber(); // 인증번호 생성
-            System.out.println(verifyNumber);
-            smsUtil.sendSms(phoneNumber, verifyNumber); // 인증번호 발송
-            smsDao.createSmsCertification(phoneNumber, verifyNumber); // 인증번호 redis에 저장
-
-            return ResponseEntity.status(HttpStatus.OK).body("인증 번호를 발송했습니다.");
-        }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 번호를 발송을 실패했습니다.");
-        }
     }
 }
