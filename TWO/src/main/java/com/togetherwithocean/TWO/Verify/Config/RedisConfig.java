@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Verify;
+package com.togetherwithocean.TWO.Verify.Config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

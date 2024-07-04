@@ -27,6 +27,7 @@ dependencies {
 	implementation 'mysql:mysql-connector-java:8.0.32'
 	implementation 'net.nurigo:sdk:4.3.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
 
 	/* lombok */
 	compileOnly 'org.projectlombok:lombok'

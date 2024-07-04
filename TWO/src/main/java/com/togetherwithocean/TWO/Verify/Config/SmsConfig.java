@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Verify;
+package com.togetherwithocean.TWO.Verify.Config;
 
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SmsUtil {
+public class SmsConfig {
 
     @Value("${coolsms.api.key}")
     private String apiKey;
@@ -30,9 +30,8 @@ public class SmsUtil {
         Message message = new Message();
         message.setFrom(sendNumber);
         message.setTo(to);
-        message.setText("[TWO] 본인 확인 인증번호는 " + verificationCode + "입니다.");
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        message.setText("[TWO] 회원가입 본인 확인 인증번호는 " + verificationCode + "입니다.");
 
-        return response;
+        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 }
