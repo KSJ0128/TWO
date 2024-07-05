@@ -65,8 +65,7 @@ public class User {
 
     @Builder
     public User(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
-                String address, String detailAddress, Long charId, String charName, Long stepGoal, Long dailyStep,
-                Long totalPlogging, Long trashBag, Long score, Long point) {
+                String address, String detailAddress, Long charId, String charName, Long stepGoal) {
         this.realName = realName;
         this.nickname = nickname;
         this.email = email;
@@ -78,10 +77,10 @@ public class User {
         this.charId = charId;
         this.charName = charName;
         this.stepGoal = stepGoal;
-        this.dailyStep = dailyStep;
-        this.totalPlogging = totalPlogging;
-        this.trashBag = trashBag;
-        this.score = score;
-        this.point = point;
+        this.dailyStep = 0L;
+        this.totalPlogging = 0L;
+        this.trashBag = 10L;
+        this.score = 0L;
+        this.point = 0L;
     }
 }

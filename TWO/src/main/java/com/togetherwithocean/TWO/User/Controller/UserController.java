@@ -1,6 +1,7 @@
 package com.togetherwithocean.TWO.User.Controller;
 
 import com.togetherwithocean.TWO.User.DTO.PostFindUserEmailReq;
+import com.togetherwithocean.TWO.User.DTO.UserJoinReq;
 import com.togetherwithocean.TWO.User.Domain.User;
 import com.togetherwithocean.TWO.User.Service.UserService;
 import com.togetherwithocean.TWO.Verify.SmsDao;
@@ -9,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -48,4 +47,33 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body("이메일은 " + findUser.getEmail() + "입니다.");
     }
+
+    @GetMapping("/check-nick")
+    public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
+        boolean isDuplicate = userService.isNicknameDuplicate(nickname);
+        if (isDuplicate) {
+            return ResponseEntity.status(HttpStatus.OK).body("이미 사용중인 닉네임입니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("사용가능한 닉네임입니다.");
+        }
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<String> checkEmail(@RequestParam String email) {
+        boolean isDuplicate = userService.isEmailDuplicate(email);
+        if (isDuplicate) {
+            return ResponseEntity.status(HttpStatus.OK).body("이미 사용중인 이메일입니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("사용가능한 이메일입니다.");
+        }
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<String> saveBasicInfo(@RequestBody UserJoinReq userInfoReq) {
+        Long userNum = userService.save(userInfoReq);
+        if (userNum != null)
+            return ResponseEntity.status(HttpStatus.OK).body("회원 가입 완료 " + userNum);
+        return  ResponseEntity.status(HttpStatus.OK).body("회원가입 실패");
+    }
+
 }
