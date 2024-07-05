@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
+    // 유저명으로 유저 찾기
     @Transactional
     public User getUserByRealName(String realName) {
         return userRepository.findByRealName(realName);
     }
+
 
     public boolean isNicknameDuplicate(String nickname) {
         return userRepository.existsByNickname(nickname);
@@ -50,5 +52,9 @@ public class UserService {
         userRepository.save(user);
         return user.getUserNumber();
     }
-
+ 
+    @Transactional
+    public void updatePasswd(User newUser) {
+        userRepository.save(newUser);
+    }
 }
