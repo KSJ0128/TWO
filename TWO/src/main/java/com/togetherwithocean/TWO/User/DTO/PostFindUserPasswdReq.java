@@ -4,18 +4,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// 이메일 찾기 요청
+// 비밀번호 찾기 요청
 @Data
 @NoArgsConstructor
-public class PostFindUserEmailReq {
+public class PostFindUserPasswdReq {
     String realName;
-    String phoneNumber;
+    String email;
     Boolean confirm;
 
     @Builder
-    public PostFindUserEmailReq(String realName, String phoneNumber, Boolean confirm) {
+    PostFindUserPasswdReq(String realName, String email, Boolean confirm) {
         this.realName = realName;
-        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.confirm = confirm;
     }
 }
