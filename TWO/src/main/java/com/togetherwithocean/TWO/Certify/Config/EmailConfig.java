@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Verify.Config;
+package com.togetherwithocean.TWO.Certify.Config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

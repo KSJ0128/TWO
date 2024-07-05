@@ -1,9 +1,10 @@
-package com.togetherwithocean.TWO.Verify.DTO;
+package com.togetherwithocean.TWO.Certify.DTO;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// 이메일 찾기 - 비밀번호 인증 번호 발송
 @Data
 @NoArgsConstructor
 public class PostSendSmsReq {

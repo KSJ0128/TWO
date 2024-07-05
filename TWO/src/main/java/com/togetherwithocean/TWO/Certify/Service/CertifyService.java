@@ -1,8 +1,7 @@
-package com.togetherwithocean.TWO.Verify.Service;
+package com.togetherwithocean.TWO.Certify.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 
 @Service
-public class VerifyService {
+public class CertifyService {
     private final String PREFIX_SMS = "SMS:";
     private final String PREFIX_EMAIL = "EMAIL:";
     private final int LIMIT_TIME = 3 * 60;
@@ -21,27 +20,31 @@ public class VerifyService {
     private final StringRedisTemplate redisTemplate;
     private String mailUser;
 
-    public VerifyService(JavaMailSender mailSender, StringRedisTemplate redisTemplate, @Value("${spring.mail.username}")
+    public CertifyService(JavaMailSender mailSender, StringRedisTemplate redisTemplate, @Value("${spring.mail.username}")
     String mailUser) {
         this.mailSender = mailSender;
         this.redisTemplate = redisTemplate;
         this.mailUser = mailUser;
     }
 
+    // redis에 전화번호 및 인증 번호 키-값으로 저장
     public void createSmsCertification(String phone, String certificationNumber) {
         redisTemplate.opsForValue()
                 .set(PREFIX_SMS + phone, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
     }
 
+    // redis에 이메일 및 인증 번호 키-값으로 저장
     public void createEmailCertification(String email, String certificationNumber) {
         redisTemplate.opsForValue()
                 .set(PREFIX_EMAIL + email, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
     }
 
+    // redis에 전화번호 키 값으로 인증 번호 불러오기
     public String getSmsCertification(String phone) {
         return redisTemplate.opsForValue().get(PREFIX_SMS + phone);
     }
 
+    // redis에 이메일 키 값으로 인증 번호 불러오기
     public String getEmailCertification(String email) {
         return redisTemplate.opsForValue().get(PREFIX_EMAIL + email);
     }
@@ -54,6 +57,7 @@ public class VerifyService {
 //        return redisTemplate.hasKey(PREFIX + phone);
 //    }
 
+    // 인증 번호 생성
     @Transactional
     public String createVerifyNumber() {
         int randomNumber = (int)(Math.random() * 10000) + (int)(Math.random() * 100);
@@ -62,7 +66,6 @@ public class VerifyService {
     }
 
     @Transactional
-    // 이메일 전송
     public void mailSend(String setFrom, String toEmail, String title, String content) throws MessagingException {
 
         // JavaMailSender 객체 사용해 MimeMessage 객체 생성
@@ -81,6 +84,7 @@ public class VerifyService {
         mailSender.send(message);
     }
 
+    // 이메일 전송
     @Transactional
     public void joinEmail(String email, String verifyNumber) throws MessagingException {
         String setFrom = mailUser;
@@ -89,7 +93,7 @@ public class VerifyService {
         String content =
                         "회원가입 본인 확인 인증 번호는 " + verifyNumber + "입니다." +
                         "<br>" +
-                        "인증번호를 입력해주세요"; // 이메일 내용 삽입
+                        "인증번호를 입력해주세요."; // 이메일 내용 삽입
         mailSend(setFrom, tomail, title, content);
     }
 }

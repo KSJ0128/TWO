@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Verify.Config;
+package com.togetherwithocean.TWO.Certify.Config;
 
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;
