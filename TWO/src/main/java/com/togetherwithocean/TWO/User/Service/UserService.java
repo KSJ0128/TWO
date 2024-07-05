@@ -17,4 +17,8 @@ public class UserService {
         return userRepository.findByRealName(realName);
     }
 
+    @Transactional
+    public void updatePasswd(User newUser) {
+        userRepository.save(newUser);
+    }
 }
