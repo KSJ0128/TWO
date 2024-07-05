@@ -4,12 +4,11 @@ import com.togetherwithocean.TWO.User.DTO.PostFindUserEmailReq;
 import com.togetherwithocean.TWO.User.DTO.PostFindUserPasswdReq;
 import com.togetherwithocean.TWO.User.Domain.User;
 import com.togetherwithocean.TWO.User.Service.UserService;
-import com.togetherwithocean.TWO.Certify.Service.CertifyService;
-import com.togetherwithocean.TWO.Certify.Config.SmsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +46,7 @@ public class UserController {
     }
 
     // 비밀번호 찾기 api
-    @PostMapping("/find-pw")
+    @PatchMapping("/find-pw")
     public ResponseEntity<String> findUserPasswd(@RequestBody PostFindUserPasswdReq postFindUserPasswdReq) {
 
         User findUser = userService.getUserByRealName(postFindUserPasswdReq.getRealName()); // 유저명으로 유저 조회
@@ -61,9 +60,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("가입된 유저가 아닙니다.");
 
         // 인증 번호 확인 유무 체크
-        if (postFindUserPasswdReq.getConfirm())
-            return ResponseEntity.status(HttpStatus.OK).body("유저 정보가 일치합니다.");
+        if (!postFindUserPasswdReq.getConfirm())
+            return ResponseEntity.status(HttpStatus.OK).body("인증 번호 확인이 되지 않았습니다.");
+
+        // 비밀번호 일치 확인
+        if (postFindUserPasswdReq.getPasswd().equals(postFindUserPasswdReq.getRe_passwd())) {
+            findUser.setPasswd(postFindUserPasswdReq.getPasswd());
+            userService.updatePasswd(findUser);
+            return ResponseEntity.status(HttpStatus.OK).body("비밀번호 설정이 완료되었습니다.");
+        }
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 번호 확인이 되지 않았습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");
     }
 }
