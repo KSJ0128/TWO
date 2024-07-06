@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.User.DTO;
+package com.togetherwithocean.TWO.Member.DTO;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UserJoinReq {
+public class MemberJoinReq {
     String realName;
     String nickname;
     String email;
@@ -21,9 +21,9 @@ public class UserJoinReq {
     Long   stepGoal;
 
     @Builder
-    public UserJoinReq(String realName, String email, String passwd, String checkPasswd, String phoneNumber,
-                       String postalCode, String address, String detailAddress,
-                       Long charId, String charName, Long stepGoal)
+    public MemberJoinReq(String realName, String email, String passwd, String checkPasswd, String phoneNumber,
+                         String postalCode, String address, String detailAddress,
+                         Long charId, String charName, Long stepGoal)
     {
         this.realName = realName;
         this.email = email;

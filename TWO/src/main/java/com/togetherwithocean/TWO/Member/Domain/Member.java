@@ -1,30 +1,30 @@
-package com.togetherwithocean.TWO.User.Domain;
+package com.togetherwithocean.TWO.Member.Domain;
 
+import com.togetherwithocean.TWO.Member.Authority;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static com.togetherwithocean.TWO.Member.Authority.ROLE_USER;
+
 @Data
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_number")
-    private Long userNumber;
+    private Long memberNumber;
 
     @Column(name = "real_name")
     private String realName;
 
-    @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "passwd")
     private String passwd;
 
     @Column(name = "phone_number")
@@ -33,7 +33,6 @@ public class User {
     @Column(name = "postal_code")
     private String postalCode;
 
-    @Column(name = "address")
     private String address;
 
     @Column(name = "detail_address")
@@ -57,15 +56,16 @@ public class User {
     @Column(name = "trash_bag")
     private Long trashBag;
 
-    @Column(name = "score")
     private Long score;
 
-    @Column(name = "point")
     private Long point;
 
+    private String authority;
+
+
     @Builder
-    public User(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
-                String address, String detailAddress, Long charId, String charName, Long stepGoal) {
+    public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
+                String address, String detailAddress, Long charId, String charName, Long stepGoal, String authority) {
         this.realName = realName;
         this.nickname = nickname;
         this.email = email;
@@ -82,5 +82,6 @@ public class User {
         this.trashBag = 10L;
         this.score = 0L;
         this.point = 0L;
+        this.authority = authority;
     }
 }

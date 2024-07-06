@@ -18,13 +18,13 @@ public class CertifyService {
     private final int LIMIT_TIME = 3 * 60;
     private JavaMailSender mailSender;
     private final StringRedisTemplate redisTemplate;
-    private String mailUser;
+    private String mailMember;
 
-    public CertifyService(JavaMailSender mailSender, StringRedisTemplate redisTemplate, @Value("${spring.mail.username}")
-    String mailUser) {
+    public CertifyService(JavaMailSender mailSender, StringRedisTemplate redisTemplate, @Value("${spring.mail.membername}")
+    String mailMember) {
         this.mailSender = mailSender;
         this.redisTemplate = redisTemplate;
-        this.mailUser = mailUser;
+        this.mailMember = mailMember;
     }
 
     // redis에 전화번호 및 인증 번호 키-값으로 저장
@@ -87,7 +87,7 @@ public class CertifyService {
     // 이메일 전송
     @Transactional
     public void joinEmail(String email, String verifyNumber) throws MessagingException {
-        String setFrom = mailUser;
+        String setFrom = mailMember;
         String tomail = email;
         String title = "[TWO] 회원가입 본인 확인 인증번호입니다."; // 이메일 제목
         String content =
