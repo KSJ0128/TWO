@@ -1,6 +1,5 @@
 package com.togetherwithocean.TWO.Member.Service;
 
-import com.togetherwithocean.TWO.Jwt.CustomUserDetailService;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Authority;
@@ -8,10 +7,6 @@ import com.togetherwithocean.TWO.Member.DTO.MemberJoinReq;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,19 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
-    private final CustomUserDetailService customUserDetailService;
+
 
     // 유저명으로 유저 찾기
     @Transactional
     public Member getMemberByRealName(String realName) {
         return memberRepository.findByRealName(realName);
-    }
-
-    @Transactional
-    public Member getMemberByEmail(String email) {
-        return memberRepository.findMemberByEmail(email);
     }
 
     public boolean isNicknameDuplicate(String nickname) {
@@ -76,7 +65,6 @@ public class MemberService {
 
     @Transactional
     public TokenDto signIn(Member loginMember) {
-
         // 토큰 생성
         TokenDto jwtToken = jwtProvider.generateToken(loginMember);
         return jwtToken;

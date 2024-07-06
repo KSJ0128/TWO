@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Jwt.Config;
+package com.togetherwithocean.TWO.Jwt;
 
 import com.togetherwithocean.TWO.Jwt.JwtAuthenticationFilter;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
@@ -31,7 +31,6 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/member/sign-in", "/member/join").permitAll()
-                        .requestMatchers("/member/test").authenticated()
                 .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
                         UsernamePasswordAuthenticationFilter.class);

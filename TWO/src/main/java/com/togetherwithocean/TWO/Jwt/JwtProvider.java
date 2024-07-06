@@ -40,13 +40,6 @@ public class JwtProvider {
     }
 
     public TokenDto generateToken(Member loginMember) {
-//        System.out.print("Authentication");
-//        System.out.print(authentication);
-
-//        // 권한 가져오기
-//        String authorities = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
 
@@ -70,6 +63,7 @@ public class JwtProvider {
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .userNumber(loginMember.getMemberNumber())
                 .build();
     }
 
