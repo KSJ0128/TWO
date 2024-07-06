@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.User.DTO;
+package com.togetherwithocean.TWO.Member.DTO;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 // 이메일 찾기 요청
 @Data
 @NoArgsConstructor
-public class PostFindUserEmailReq {
+public class PostFindMemberEmailReq {
     String realName;
     String phoneNumber;
     Boolean confirm;
 
     @Builder
-    public PostFindUserEmailReq(String realName, String phoneNumber, Boolean confirm) {
+    public PostFindMemberEmailReq(String realName, String phoneNumber, Boolean confirm) {
         this.realName = realName;
         this.phoneNumber = phoneNumber;
         this.confirm = confirm;
