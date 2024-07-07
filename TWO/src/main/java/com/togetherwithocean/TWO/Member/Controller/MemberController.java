@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
 
     @Autowired
@@ -124,17 +123,8 @@ public class MemberController {
         if (loginMember == null && loginMember.getPasswd().equals(postSignInReq.getPasswd()))
             return ResponseEntity.status(HttpStatus.OK).body(null);
 
-        // 액세스 토큰 발급
-        TokenDto token = memberService.signIn(loginMember);
-        log.info("request email = {}, password = {}", loginMember.getEmail(), loginMember.getPasswd());
-        log.info("jwtToken accessToken = {}, refreshToken = {}", token.getAccessToken(), token.getRefreshToken());
-
-
-        // Header에 정보 넘겨주기
-        response.setHeader("MemberEmail", loginMember.getEmail());
-        response.setHeader("TokenType", "Bearer");
-        response.setHeader("AccessToken", token.getAccessToken());
-        response.setHeader("RefreshToken", token.getRefreshToken());
+        // 토큰 생성 및 헤더에 토큰 정보 추가
+        TokenDto token = memberService.setTokenInHeader(loginMember, response);
 
         // 로그인 성공시
         return ResponseEntity.status(HttpStatus.OK).body(token);
