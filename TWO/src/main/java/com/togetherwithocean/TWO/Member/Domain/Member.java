@@ -10,21 +10,23 @@ import static com.togetherwithocean.TWO.Member.Authority.ROLE_USER;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "member")
 @NoArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_number")
+    @Column(name = "member_number")
     private Long memberNumber;
 
     @Column(name = "real_name")
     private String realName;
 
+    @Column(name = "nickname")
     private String nickname;
 
+    @Column(name = "email")
     private String email;
-
+    @Column(name = "passwd")
     private String passwd;
 
     @Column(name = "phone_number")
@@ -33,6 +35,7 @@ public class Member {
     @Column(name = "postal_code")
     private String postalCode;
 
+    @Column(name = "address")
     private String address;
 
     @Column(name = "detail_address")
@@ -50,17 +53,23 @@ public class Member {
     @Column(name = "daily_step")
     private Long dailyStep;
 
-    @Column(name = "total_plogging")
-    private Long totalPlogging;
+    @Column(name = "avail_trash_bag")
+    private Long availTrashBag;
 
-    @Column(name = "trash_bag")
-    private Long trashBag;
+    @Column(name = "total_trash_bag")
+    private Long totalTrashBag;
 
-    private Long score;
+    @Column(name = "monthly_trash_bag")
+    private Long monthlyTrashBag;
 
+    @Column(name = "monthly_score")
+    private Long monthlyScore;
+
+    @Column(name = "point")
     private Long point;
 
-    private String authority;
+    @Column(name = "authority")
+    private Authority authority;
 
 
     @Builder
@@ -78,10 +87,11 @@ public class Member {
         this.charName = charName;
         this.stepGoal = stepGoal;
         this.dailyStep = 0L;
-        this.totalPlogging = 0L;
-        this.trashBag = 10L;
-        this.score = 0L;
+        this.availTrashBag = 10L;
+        this.totalTrashBag = 0L;
+        this.monthlyTrashBag = 0L;
+        this.monthlyScore = 0L;
         this.point = 0L;
-        this.authority = authority;
+        this.authority = ROLE_USER;
     }
 }
