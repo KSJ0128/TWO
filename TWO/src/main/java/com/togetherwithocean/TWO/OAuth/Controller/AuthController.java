@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @GetMapping("/kakao/callback")
-    public @ResponseBody ResponseEntity<String> kakaoCallback(@RequestParam String code, HttpServletResponse response) {
+    public @ResponseBody ResponseEntity<Member> kakaoCallback(@RequestParam String code, HttpServletResponse response) {
         String accessToken = kakaoService.getAccessToken(code);
         KakaoUserInfo kakaoUserInfo = kakaoService.getUserInfoByAccessToken(accessToken);
 //        System.out.println(kakaoUserInfo.getName());
@@ -42,12 +42,12 @@ public class AuthController {
         Member loginMember = memberRepository.findMemberByEmail(kakaoUserInfo.getEmail());
 
         if (loginMember == null)
-            return ResponseEntity.status(HttpStatus.OK).body("가입하지 않은 사용자입니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(null);
 
         // 토큰 생성 및 헤더에 토큰 정보 추가
         TokenDto token = memberService.setTokenInHeader(loginMember, response);
 
         // 로그인 성공시 사용자 반환
-        return ResponseEntity.status(HttpStatus.OK).body(token.toString());
+        return ResponseEntity.status(HttpStatus.OK).body(loginMember);
     }
 }

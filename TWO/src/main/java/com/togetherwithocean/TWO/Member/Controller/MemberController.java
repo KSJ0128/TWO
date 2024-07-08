@@ -106,15 +106,13 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
-        Long userNum = memberService.save(userInfoReq);
-        if (userNum != null)
-            return ResponseEntity.status(HttpStatus.OK).body("회원 가입 완료 " + userNum);
-        return  ResponseEntity.status(HttpStatus.OK).body("회원가입 실패");
+    public ResponseEntity<Member> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
+        Member joinMember = memberService.save(userInfoReq);
+        return ResponseEntity.status(HttpStatus.OK).body(joinMember);
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<TokenDto> sign_in(@RequestBody PostSignInReq postSignInReq, HttpServletResponse response) {
+    public ResponseEntity<Member> sign_in(@RequestBody PostSignInReq postSignInReq, HttpServletResponse response) {
 
         // 로그인 요청 보낸 멤버 정보
         Member loginMember = memberRepository.findMemberByEmail(postSignInReq.getEmail());
@@ -127,7 +125,7 @@ public class MemberController {
         TokenDto token = memberService.setTokenInHeader(loginMember, response);
 
         // 로그인 성공시
-        return ResponseEntity.status(HttpStatus.OK).body(token);
+        return ResponseEntity.status(HttpStatus.OK).body(loginMember);
     }
 
     @GetMapping("/test")

@@ -36,7 +36,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Long save(MemberJoinReq memberSave) {
+    public Member save(MemberJoinReq memberSave) {
         System.out.println(memberSave.getPasswd() + " "+ memberSave.getCheckPasswd());
 
         // 비밀번호 일치 여부 예외처리?
@@ -59,7 +59,7 @@ public class MemberService {
                 .authority(Authority.ROLE_USER.toString())
                 .build();
         memberRepository.save(member);
-        return member.getMemberNumber();
+        return member;
     }
  
     @Transactional
