@@ -1,17 +1,12 @@
 package com.togetherwithocean.TWO.Member.Controller;
 
 import com.togetherwithocean.TWO.Jwt.SecurityUtil;
+import com.togetherwithocean.TWO.Member.DTO.*;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
-import com.togetherwithocean.TWO.Member.DTO.MemberJoinReq;
-import com.togetherwithocean.TWO.Member.DTO.PostFindMemberEmailReq;
-import com.togetherwithocean.TWO.Member.DTO.PostFindMemberPasswdReq;
-import com.togetherwithocean.TWO.Member.DTO.PostSignInReq;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Service.MemberService;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -112,7 +107,7 @@ public class MemberController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Member> sign_in(@RequestBody PostSignInReq postSignInReq, HttpServletResponse response) {
+    public ResponseEntity<PostSignInRes> sign_in(@RequestBody PostSignInReq postSignInReq, HttpServletResponse response) {
 
         // 로그인 요청 보낸 멤버 정보
         Member loginMember = memberRepository.findMemberByEmail(postSignInReq.getEmail());
@@ -125,11 +120,9 @@ public class MemberController {
         TokenDto token = memberService.setTokenInHeader(loginMember, response);
 
         // 로그인 성공시
-        return ResponseEntity.status(HttpStatus.OK).body(loginMember);
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.setSignInInfo(loginMember, token));
     }
 
     @GetMapping("/test")
-    public ResponseEntity<String> testToken() {
-        return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail());
-    }
+    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
 }
