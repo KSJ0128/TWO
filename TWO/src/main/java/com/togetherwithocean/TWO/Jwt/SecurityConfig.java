@@ -30,7 +30,8 @@ public class SecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/member/sign-in", "/member/join").permitAll()
+                .requestMatchers("/member/sign-in", "/member/join",
+                        "/oauth/kakao/login", "/oauth/kakao/callback").permitAll()
                 .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
                         UsernamePasswordAuthenticationFilter.class);

@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
 
     @Autowired
@@ -107,15 +106,13 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
-        Long userNum = memberService.save(userInfoReq);
-        if (userNum != null)
-            return ResponseEntity.status(HttpStatus.OK).body("회원 가입 완료 " + userNum);
-        return  ResponseEntity.status(HttpStatus.OK).body("회원가입 실패");
+    public ResponseEntity<Member> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
+        Member joinMember = memberService.save(userInfoReq);
+        return ResponseEntity.status(HttpStatus.OK).body(joinMember);
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<TokenDto> sign_in(@RequestBody PostSignInReq postSignInReq, HttpServletResponse response) {
+    public ResponseEntity<Member> sign_in(@RequestBody PostSignInReq postSignInReq, HttpServletResponse response) {
 
         // 로그인 요청 보낸 멤버 정보
         Member loginMember = memberRepository.findMemberByEmail(postSignInReq.getEmail());
@@ -124,20 +121,11 @@ public class MemberController {
         if (loginMember == null && loginMember.getPasswd().equals(postSignInReq.getPasswd()))
             return ResponseEntity.status(HttpStatus.OK).body(null);
 
-        // 액세스 토큰 발급
-        TokenDto token = memberService.signIn(loginMember);
-        log.info("request email = {}, password = {}", loginMember.getEmail(), loginMember.getPasswd());
-        log.info("jwtToken accessToken = {}, refreshToken = {}", token.getAccessToken(), token.getRefreshToken());
-
-
-        // Header에 정보 넘겨주기
-        response.setHeader("MemberEmail", loginMember.getEmail());
-        response.setHeader("TokenType", "Bearer");
-        response.setHeader("AccessToken", token.getAccessToken());
-        response.setHeader("RefreshToken", token.getRefreshToken());
+        // 토큰 생성 및 헤더에 토큰 정보 추가
+        TokenDto token = memberService.setTokenInHeader(loginMember, response);
 
         // 로그인 성공시
-        return ResponseEntity.status(HttpStatus.OK).body(token);
+        return ResponseEntity.status(HttpStatus.OK).body(loginMember);
     }
 
     @GetMapping("/test")
