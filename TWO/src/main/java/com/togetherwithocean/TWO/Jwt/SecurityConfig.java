@@ -31,6 +31,8 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/member/sign-in", "/member/join",
+                        "/member/check-email", "/member/check-nick",
+                        "member/find-email", "member/find-pw",
                         "/oauth/kakao/login", "/oauth/kakao/callback").permitAll()
                 .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),

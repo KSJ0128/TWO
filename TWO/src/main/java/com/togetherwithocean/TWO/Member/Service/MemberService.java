@@ -4,6 +4,7 @@ import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Authority;
 import com.togetherwithocean.TWO.Member.DTO.MemberJoinReq;
+import com.togetherwithocean.TWO.Member.DTO.PostSignInRes;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,9 +64,7 @@ public class MemberService {
     }
  
     @Transactional
-    public void updatePasswd(Member newMember) {
-        memberRepository.save(newMember);
-    }
+    public void updatePasswd(Member newMember) { memberRepository.save(newMember); }
 
     @Transactional
     public TokenDto setTokenInHeader(Member loginMember, HttpServletResponse response) {
@@ -83,5 +82,9 @@ public class MemberService {
         response.setHeader("RefreshToken", jwtToken.getRefreshToken());
 
         return jwtToken;
+    }
+
+    public PostSignInRes setSignInInfo(Member loginMember, TokenDto token) {
+        return new PostSignInRes(loginMember, token);
     }
 }
