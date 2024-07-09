@@ -25,6 +25,15 @@ public class PloggingController {
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
+    @GetMapping("/trash")
+    ResponseEntity<Member> saveTrashBag (@RequestParam Long trashBag, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Member member = ploggingService.saveTrashBag(principal.getName(), trashBag);
+        return ResponseEntity.status(HttpStatus.OK).body(member);
+    }
+
+
     // 줍깅 - 장소 입력 API
     @GetMapping("/location")
     ResponseEntity<String> getPloggingLocation (@RequestParam String address) {
