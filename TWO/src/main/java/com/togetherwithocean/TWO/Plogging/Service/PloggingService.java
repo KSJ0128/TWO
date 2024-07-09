@@ -13,6 +13,15 @@ import java.util.List;
 public class PloggingService {
     private final MemberRepository memberRepository;
 
+    public Member saveStep(String email, Long step) {
+        Member member = memberRepository.findMemberByEmail(email);
+        Long curStep = member.getDailyStep();
+        member.setDailyStep(curStep + step);
+        memberRepository.save(member);
+        return member;
+    }
+
+
     @Scheduled(cron = "0 0 0 1 * ?")
     public void initPloggingTrashNScore() {
         List<Member> allMember = memberRepository.findAll();
