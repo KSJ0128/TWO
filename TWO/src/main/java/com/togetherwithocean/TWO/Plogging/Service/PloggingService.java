@@ -1,6 +1,5 @@
 package com.togetherwithocean.TWO.Plogging.Service;
 
-import com.togetherwithocean.TWO.Member.DTO.TrashBagUpdateDTO;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import lombok.AllArgsConstructor;

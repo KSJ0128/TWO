@@ -3,6 +3,7 @@ package com.togetherwithocean.TWO.Member.Service;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Authority;
+import com.togetherwithocean.TWO.Member.DTO.MainInfoRes;
 import com.togetherwithocean.TWO.Member.DTO.MemberJoinReq;
 import com.togetherwithocean.TWO.Member.DTO.PostSignInRes;
 import com.togetherwithocean.TWO.Member.Domain.Member;
@@ -86,5 +87,18 @@ public class MemberService {
 
     public PostSignInRes setSignInInfo(Member loginMember, TokenDto token) {
         return new PostSignInRes(loginMember, token);
+    }
+
+    public MainInfoRes getMainInfo(String email) {
+        Member member = memberRepository.findMemberByEmail(email);
+        MainInfoRes mainInfo =MainInfoRes.builder()
+                .nickname(member.getNickname())
+                .charId(member.getCharId())
+                .charName(member.getCharName())
+                .stepGoal(member.getStepGoal())
+                .dailyStep(member.getDailyStep())
+                .monthlyTrashBag(member.getMonthlyTrashBag())
+                .build();
+        return mainInfo;
     }
 }
