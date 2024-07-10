@@ -1,25 +1,29 @@
-package com.togetherwithocean.TWO.Calendar.Domain;
+package com.togetherwithocean.TWO.PlogCalendar.Domain;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "calendar")
 @NoArgsConstructor
-public class Calendar {
+public class PlogCalendar {
 
     @Id
-    @Column(name = "member_number", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "calendar_number")
+    private Long calendarNumber;
+
+    @Column(name = "member_number")
     private Long memberNumber;
 
-    @Id
-    @Column(name = "date", nullable = false)
-    private Date date;
+    @Column(name = "date")
+    private LocalDate date;
 
     @Column(name = "trash_bag")
     private Long trashBag;
@@ -31,7 +35,7 @@ public class Calendar {
     private Long step;
 
     @Builder
-    public Calendar(Long memberNumber, Date date, Long trashBag, String location, Long step) {
+    public PlogCalendar(Long memberNumber, LocalDate date, Long trashBag, String location, Long step) {
         this.memberNumber = memberNumber;
         this.date = date;
         this.trashBag = trashBag;
