@@ -12,15 +12,15 @@ public class MainInfoRes {
     String charName;
     Long stepGoal;
     Long dailyStep;
-    Long monthlyTrashBag;
+    Long monthlyPlog;
 
     @Builder
-    public MainInfoRes(String nickname, Long charId, String charName, Long stepGoal, Long dailyStep, Long monthlyTrashBag) {
+    public MainInfoRes(String nickname, Long charId, String charName, Long stepGoal, Long dailyStep, Long monthlyPlog) {
         this.nickname = nickname;
         this.charId = charId;
         this.charName = charName;
         this.stepGoal = stepGoal;
         this.dailyStep = dailyStep;
-        this.monthlyTrashBag = monthlyTrashBag;
+        this.monthlyPlog = monthlyPlog;
     }
 }
