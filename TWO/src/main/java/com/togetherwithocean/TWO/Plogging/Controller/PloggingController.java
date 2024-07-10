@@ -1,15 +1,14 @@
 package com.togetherwithocean.TWO.Plogging.Controller;
-
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Plogging.Service.PloggingService;
 import lombok.RequiredArgsConstructor;
+import com.togetherwithocean.TWO.PlogCalendar.Domain.PlogCalendar;
+import com.togetherwithocean.TWO.Plogging.DTO.PostPlogReq;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/plogging")
@@ -33,13 +32,19 @@ public class PloggingController {
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
-
     // 줍깅 - 장소 입력 API
     @GetMapping("/location")
-    ResponseEntity<String> getPloggingLocation (@RequestParam String address) {
+    public ResponseEntity<String> getPloggingLocation (@RequestParam String address) {
         if (address == null)
             return ResponseEntity.status(HttpStatus.OK).body(null);
         else
             return ResponseEntity.status(HttpStatus.OK).body(address);
+    }
+
+    // 줍깅 API
+    @PostMapping("/plog")
+    public ResponseEntity<PlogCalendar> doPlogging (@RequestBody PostPlogReq postPlogReq) {
+       PlogCalendar plog =  ploggingService.savePlog(postPlogReq);
+       return ResponseEntity.status(HttpStatus.OK).body(plog);
     }
 }
