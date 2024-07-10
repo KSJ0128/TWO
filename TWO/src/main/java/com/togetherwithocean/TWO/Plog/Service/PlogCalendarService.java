@@ -1,10 +1,10 @@
-package com.togetherwithocean.TWO.PlogCalendar.Service;
+package com.togetherwithocean.TWO.Plog.Service;
 
-import com.togetherwithocean.TWO.PlogCalendar.DTO.GetMonthlyReq;
-import com.togetherwithocean.TWO.PlogCalendar.DTO.GetMonthlyRes;
-import com.togetherwithocean.TWO.PlogCalendar.DTO.MonthlyDto;
+import com.togetherwithocean.TWO.Plog.DTO.GetMonthlyReq;
+import com.togetherwithocean.TWO.Plog.DTO.GetMonthlyRes;
+import com.togetherwithocean.TWO.Plog.DTO.MonthlyDto;
 import com.togetherwithocean.TWO.Member.Domain.Member;
-import com.togetherwithocean.TWO.PlogCalendar.Repository.PlogCalendarRepository;
+import com.togetherwithocean.TWO.Plog.Repository.PlogCalendarRepository;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service

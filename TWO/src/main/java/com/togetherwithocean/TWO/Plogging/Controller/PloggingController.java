@@ -2,7 +2,7 @@ package com.togetherwithocean.TWO.Plogging.Controller;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Plogging.Service.PloggingService;
 import lombok.RequiredArgsConstructor;
-import com.togetherwithocean.TWO.PlogCalendar.Domain.PlogCalendar;
+import com.togetherwithocean.TWO.Plog.Domain.PlogCalendar;
 import com.togetherwithocean.TWO.Plogging.DTO.PostPlogReq;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

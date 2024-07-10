@@ -1,8 +1,8 @@
-package com.togetherwithocean.TWO.PlogCalendar.Controller;
+package com.togetherwithocean.TWO.Plog.Controller;
 
-import com.togetherwithocean.TWO.PlogCalendar.DTO.GetMonthlyReq;
-import com.togetherwithocean.TWO.PlogCalendar.DTO.GetMonthlyRes;
-import com.togetherwithocean.TWO.PlogCalendar.Service.PlogCalendarService;
+import com.togetherwithocean.TWO.Plog.DTO.GetMonthlyReq;
+import com.togetherwithocean.TWO.Plog.DTO.GetMonthlyRes;
+import com.togetherwithocean.TWO.Plog.Service.PlogCalendarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

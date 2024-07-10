@@ -56,11 +56,11 @@ public class Member {
     @Column(name = "avail_trash_bag")
     private Long availTrashBag;
 
-    @Column(name = "total_trash_bag")
-    private Long totalTrashBag;
+    @Column(name = "total_plog")
+    private Long totalPlog;
 
-    @Column(name = "monthly_trash_bag")
-    private Long monthlyTrashBag;
+    @Column(name = "monthly_plog")
+    private Long monthlyPlog;
 
     @Column(name = "monthly_score")
     private Long monthlyScore;
@@ -74,7 +74,7 @@ public class Member {
 
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
-                String address, String detailAddress, Long charId, String charName, Long stepGoal, String authority) {
+                String address, String detailAddress, Long charId, String charName, Long stepGoal) {
         this.realName = realName;
         this.nickname = nickname;
         this.email = email;
@@ -88,8 +88,8 @@ public class Member {
         this.stepGoal = stepGoal;
         this.dailyStep = 0L;
         this.availTrashBag = 10L;
-        this.totalTrashBag = 0L;
-        this.monthlyTrashBag = 0L;
+        this.totalPlog = 0L;
+        this.monthlyPlog = 0L;
         this.monthlyScore = 0L;
         this.point = 0L;
         this.authority = ROLE_USER;

@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.PlogCalendar.DTO;
+package com.togetherwithocean.TWO.Plog.DTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

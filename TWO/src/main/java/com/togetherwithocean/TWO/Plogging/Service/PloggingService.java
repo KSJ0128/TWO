@@ -1,17 +1,14 @@
 package com.togetherwithocean.TWO.Plogging.Service;
 
-import com.togetherwithocean.TWO.PlogCalendar.Domain.PlogCalendar;
-import com.togetherwithocean.TWO.PlogCalendar.Repository.PlogCalendarRepository;
+import com.togetherwithocean.TWO.Plog.Domain.PlogCalendar;
+import com.togetherwithocean.TWO.Plog.Repository.PlogCalendarRepository;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
-import com.togetherwithocean.TWO.Plogging.DTO.PostPlogReq;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.util.Calendar;
 import java.util.List;
 
 @Service
