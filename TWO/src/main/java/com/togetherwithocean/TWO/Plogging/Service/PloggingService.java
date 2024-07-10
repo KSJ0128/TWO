@@ -32,6 +32,25 @@ public class PloggingService {
         }
     }
 
+    public Member saveStep(String email, Long step) {
+        Member member = memberRepository.findMemberByEmail(email);
+        member.setDailyStep(member.getDailyStep() + step);
+        memberRepository.save(member);
+        return member;
+    }
+
+    public Member saveTrashBag(String email, Long trashBag) {
+        Member member = memberRepository.findMemberByEmail(email);
+
+        member.setAvailTrashBag(member.getAvailTrashBag() + trashBag);
+        member.setTotalTrashBag(member.getTotalTrashBag() + trashBag);
+        member.setMonthlyTrashBag(member.getMonthlyTrashBag() + trashBag);
+        member.setMonthlyScore(member.getMonthlyScore() + trashBag * 1000);
+        member.setPoint(member.getPoint() + trashBag * 100);
+
+        memberRepository.save(member);
+        return member;
+
     @Transactional
     public PlogCalendar savePlog(PostPlogReq postPlogReq) {
         PlogCalendar calendar = PlogCalendar.builder()

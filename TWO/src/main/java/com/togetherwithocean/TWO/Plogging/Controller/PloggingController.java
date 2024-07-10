@@ -1,20 +1,35 @@
 package com.togetherwithocean.TWO.Plogging.Controller;
-
+import com.togetherwithocean.TWO.Member.Domain.Member;
+import com.togetherwithocean.TWO.Plogging.Service.PloggingService;
+import lombok.RequiredArgsConstructor;
 import com.togetherwithocean.TWO.PlogCalendar.Domain.PlogCalendar;
 import com.togetherwithocean.TWO.Plogging.DTO.PostPlogReq;
-import com.togetherwithocean.TWO.Plogging.Service.PloggingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/plogging")
+@RequiredArgsConstructor
 public class PloggingController {
     private final PloggingService ploggingService;
 
-    public PloggingController(PloggingService ploggingService) {
-        this.ploggingService = ploggingService;
+    @GetMapping("/walk")
+    ResponseEntity<Member> saveStep (@RequestParam Long step, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Member member = ploggingService.saveStep(principal.getName(), step);
+        return ResponseEntity.status(HttpStatus.OK).body(member);
+    }
+
+    @GetMapping("/trash")
+    ResponseEntity<Member> saveTrashBag (@RequestParam Long trashBag, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Member member = ploggingService.saveTrashBag(principal.getName(), trashBag);
+        return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
     // 줍깅 - 장소 입력 API

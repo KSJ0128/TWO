@@ -10,6 +10,7 @@ import com.togetherwithocean.TWO.Member.Service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -121,6 +122,14 @@ public class MemberController {
 
         // 로그인 성공시
         return ResponseEntity.status(HttpStatus.OK).body(memberService.setSignInInfo(loginMember, token));
+    }
+
+    @GetMapping("/main-info")
+    public ResponseEntity<MainInfoRes> viewMainInfo(Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        MainInfoRes mainInfo = memberService.getMainInfo(principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(mainInfo);
     }
 
     @GetMapping("/test")
