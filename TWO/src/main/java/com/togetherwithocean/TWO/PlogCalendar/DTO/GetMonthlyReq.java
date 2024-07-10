@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class GetMonthlyReq {
-    Long memberNumber;
     LocalDate start;
     LocalDate end;
 }

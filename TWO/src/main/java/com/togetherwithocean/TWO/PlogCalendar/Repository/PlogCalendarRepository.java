@@ -1,5 +1,6 @@
 package com.togetherwithocean.TWO.PlogCalendar.Repository;
 
+import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.PlogCalendar.DTO.MonthlyDto;
 import com.togetherwithocean.TWO.PlogCalendar.Domain.PlogCalendar;
 import org.springframework.cglib.core.Local;

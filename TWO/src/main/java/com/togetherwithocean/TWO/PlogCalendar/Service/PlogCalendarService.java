@@ -7,6 +7,7 @@ import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.PlogCalendar.Repository.PlogCalendarRepository;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,11 +38,11 @@ public class PlogCalendarService {
         return monthlyList;
     }
 
-    public List<GetMonthlyRes> getMonthlyInfo(GetMonthlyReq getMonthlyReq) {
+    public List<GetMonthlyRes> getMonthlyInfo(GetMonthlyReq getMonthlyReq, Authentication principal) {
         // 월 시작 일자, 종료 일자
         LocalDate startDate = getMonthlyReq.getStart();
         LocalDate endDate = getMonthlyReq.getEnd();
-        Long memberNumber = getMonthlyReq.getMemberNumber();
+        Long memberNumber = memberRepository.findMemberByEmail(principal.getName()).getMemberNumber();
         Long days = calculateDays(startDate, endDate);
 
         // Calendar DB에서 특정 유저의 특정 월에 속하는 데이터 리스트 가져옴
@@ -57,7 +58,7 @@ public class PlogCalendarService {
             int idx = (int) ChronoUnit.DAYS.between(startDate, d); // 인덱스를 정확하게 계산
 
             Long dailyStep = monthlyRess.get(idx).getDailyStep();
-            Member member = memberRepository.findMemberByMemberNumber(getMonthlyReq.getMemberNumber());
+            Member member = memberRepository.findMemberByMemberNumber(memberNumber);
 
             monthlyRess.get(idx).setDailyStep(dailyStep + monthlyDto.getStep());
             if (monthlyRess.get(idx).getDailyStep() > member.getStepGoal())
