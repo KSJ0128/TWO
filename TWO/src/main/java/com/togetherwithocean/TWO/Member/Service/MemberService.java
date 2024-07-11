@@ -58,7 +58,6 @@ public class MemberService {
                 .charId(memberSave.getCharId())
                 .charName(memberSave.getCharName())
                 .stepGoal(memberSave.getStepGoal())
-                .authority(Authority.ROLE_USER.toString())
                 .build();
         memberRepository.save(member);
         return member;
@@ -97,7 +96,7 @@ public class MemberService {
                 .charName(member.getCharName())
                 .stepGoal(member.getStepGoal())
                 .dailyStep(member.getDailyStep())
-                .monthlyTrashBag(member.getMonthlyTrashBag())
+                .monthlyPlog(member.getMonthlyPlog())
                 .build();
         return mainInfo;
     }
