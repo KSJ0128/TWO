@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Statistics.Controller;
+package com.togetherwithocean.TWO.Statistics.Domain;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "statstics")
+@Table(name = "statistics")
 @NoArgsConstructor
 public class Statistics {
 
@@ -28,13 +28,13 @@ public class Statistics {
     private Boolean achiveStep;
 
     @Column(name = "achive_plog")
-    private Boolean achiveplog;
+    private Boolean achivePlog;
 
     @Builder
     public Statistics(Long memberNumber, LocalDate date) {
         this.memberNumber = memberNumber;
         this.date = date;
         this.achiveStep = false;
-        this.achiveplog = false;
+        this.achivePlog = false;
     }
 }
