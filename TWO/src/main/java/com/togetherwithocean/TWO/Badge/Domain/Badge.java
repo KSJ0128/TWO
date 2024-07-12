@@ -1,9 +1,13 @@
 package com.togetherwithocean.TWO.Badge.Domain;
 
+import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,6 +28,9 @@ public class Badge {
 
     @Column(name = "mission")
     private String mission;
+
+    @OneToMany(mappedBy = "badge")
+    List<MemberBadge> membersList = new ArrayList<>();
 
     @Builder
     public Badge(String badgeName, String descript, String mission) {

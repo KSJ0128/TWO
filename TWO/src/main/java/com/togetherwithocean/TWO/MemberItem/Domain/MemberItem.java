@@ -1,5 +1,8 @@
 package com.togetherwithocean.TWO.MemberItem.Domain;
 
+import com.togetherwithocean.TWO.Item.Domain.Item;
+import com.togetherwithocean.TWO.Member.Domain.Member;
+import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -17,11 +20,13 @@ public class MemberItem {
     @Column(name = "member_item_number")
     private Long MemberItemNumber;
 
-    @Column(name = "member_number")
-    private Long memberNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_number")
+    private Member member;
 
-    @Column(name = "item_number")
-    private Long itemNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_number")
+    private Item item;
 
     @Column(name = "equip")
     private boolean equip;
@@ -35,9 +40,7 @@ public class MemberItem {
     private Double posY;
 
     @Builder
-    public MemberItem(Long memberNumber, Long itemNumber) {
-        this.memberNumber = memberNumber;
-        this.itemNumber = itemNumber;
+    public MemberItem() {
         this.equip = false;
         this.posX = null;
         this.posY = null;

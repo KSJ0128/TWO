@@ -1,10 +1,16 @@
 package com.togetherwithocean.TWO.Member.Domain;
 
 import com.togetherwithocean.TWO.Member.Authority;
+import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
+import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
+import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.togetherwithocean.TWO.Member.Authority.ROLE_USER;
 
@@ -62,6 +68,12 @@ public class Member {
 
     @Column(name = "authority")
     private Authority authority;
+
+    @OneToMany(mappedBy = "member")
+    List<MemberBadge> badgesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    List<MemberItem> itemsList = new ArrayList<>();
 
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,

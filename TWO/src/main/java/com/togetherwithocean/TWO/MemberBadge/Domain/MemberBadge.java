@@ -1,4 +1,6 @@
 package com.togetherwithocean.TWO.MemberBadge.Domain;
+import com.togetherwithocean.TWO.Badge.Domain.Badge;
+import com.togetherwithocean.TWO.Member.Domain.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -14,15 +16,11 @@ public class MemberBadge {
     @Column(name = "member_badge_number")
     private Long memberBadgeNumber;
 
-    @Column(name = "member_number")
-    private Long memberNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_number")
+    private Member member;
 
-    @Column(name = "badge_number")
-    private Long badgeNumber;
-
-    @Builder
-    public MemberBadge(Long memberNumber, Long badgeNumber) {
-        this.memberNumber = memberNumber;
-        this.badgeNumber = badgeNumber;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "badge_number")
+    private Badge badge;
 }
