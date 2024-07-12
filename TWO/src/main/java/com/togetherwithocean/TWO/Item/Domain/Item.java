@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Item {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_number", nullable = false)
     private Long itemNumber;
 
@@ -22,8 +23,7 @@ public class Item {
     private Long itemPrice;
 
     @Builder
-    public Item(Long itemNumber, String itemName, Long itemPrice) {
-        this.itemNumber = itemNumber;
+    public Item(String itemName, Long itemPrice) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
     }

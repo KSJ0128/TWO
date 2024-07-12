@@ -26,6 +26,7 @@ public class Member {
 
     @Column(name = "email")
     private String email;
+
     @Column(name = "passwd")
     private String passwd;
 
@@ -50,27 +51,17 @@ public class Member {
     @Column(name = "step_goal")
     private Long stepGoal;
 
-    @Column(name = "daily_step")
-    private Long dailyStep;
-
     @Column(name = "avail_trash_bag")
     private Long availTrashBag;
 
     @Column(name = "total_plog")
     private Long totalPlog;
 
-    @Column(name = "monthly_plog")
-    private Long monthlyPlog;
-
-    @Column(name = "monthly_score")
-    private Long monthlyScore;
-
     @Column(name = "point")
     private Long point;
 
     @Column(name = "authority")
     private Authority authority;
-
 
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
@@ -86,11 +77,8 @@ public class Member {
         this.charId = charId;
         this.charName = charName;
         this.stepGoal = stepGoal;
-        this.dailyStep = 0L;
         this.availTrashBag = 10L;
         this.totalPlog = 0L;
-        this.monthlyPlog = 0L;
-        this.monthlyScore = 0L;
         this.point = 0L;
         this.authority = ROLE_USER;
     }

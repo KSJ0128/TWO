@@ -1,10 +1,14 @@
 package com.togetherwithocean.TWO.Location.Domain;
+import com.togetherwithocean.TWO.Stat.Domain.Stat;
+import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -13,20 +17,19 @@ import java.util.Date;
 public class Location {
 
     @Id
-    @Column(name = "loc_number", nullable = false)
-    private Long locNumber;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "location_number")
+    private Long locationNumber;
 
     @Column(name = "direction")
     private String direction;
 
-    @Column(name = "recommend")
-    private Date recommend;
+    @OneToMany(mappedBy = "location")
+    List<StatLoc> statList = new ArrayList<>();
 
     @Builder
-    public Location(Long locNumber, String direction, Date recommend) {
-        this.locNumber = locNumber;
+    public Location(String direction) {
         this.direction = direction;
-        this.recommend = recommend;
     }
 }
 

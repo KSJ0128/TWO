@@ -10,20 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberBadge {
     @Id
-    @Column(name = "member_number", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_badge_number")
+    private Long memberBadgeNumber;
+
+    @Column(name = "member_number")
     private Long memberNumber;
 
-    @Id
-    @Column(name = "badge_number", nullable = false)
+    @Column(name = "badge_number")
     private Long badgeNumber;
 
-    @Column(name = "achieve")
-    private Boolean achieve;
-
     @Builder
-    public MemberBadge(Long memberNumber, Long badgeNumber, Boolean achieve) {
+    public MemberBadge(Long memberNumber, Long badgeNumber) {
         this.memberNumber = memberNumber;
         this.badgeNumber = badgeNumber;
-        this.achieve = achieve;
     }
 }

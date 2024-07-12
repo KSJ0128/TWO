@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class Badge {
 
     @Id
-    @Column(name = "badge_number", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "badge_number")
     private Long badgeNumber;
 
     @Column(name = "badge_name")
@@ -25,8 +26,7 @@ public class Badge {
     private String mission;
 
     @Builder
-    public Badge(Long badgeNumber, String badgeName, String descript, String mission) {
-        this.badgeNumber = badgeNumber;
+    public Badge(String badgeName, String descript, String mission) {
         this.badgeName = badgeName;
         this.descript = descript;
         this.mission = mission;
