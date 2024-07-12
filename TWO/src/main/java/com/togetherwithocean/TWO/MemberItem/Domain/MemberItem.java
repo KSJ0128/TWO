@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "member_item")
-@NoArgsConstructor
 public class MemberItem {
 
     @Id

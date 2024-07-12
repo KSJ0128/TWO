@@ -1,6 +1,7 @@
 package com.togetherwithocean.TWO.Item.Domain;
 
 import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
+import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class Item {
     private Long itemPrice;
 
     @OneToMany(mappedBy = "item")
-    List<MemberBadge> membersList = new ArrayList<>();
+    List<MemberItem> membersList = new ArrayList<>();
 
     @Builder
     public Item(String itemName, Long itemPrice) {
