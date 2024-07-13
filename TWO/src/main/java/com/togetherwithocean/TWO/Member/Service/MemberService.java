@@ -100,9 +100,9 @@ public class MemberService {
         LocalDate today = LocalDate.now();
         System.out.println("today : " + today.getYear() + " " + today.getMonthValue() + " \n");
 
-        Stat stat = statRepository.findStatByMemberNumberAndDate(member.getMemberNumber(), today);
+        Stat stat = statRepository.findStatByMemberAndDate(member, today);
 
-        Long monthlyPlogging = statRepository.getMonthlyPlogging(member.getMemberNumber(), today.getYear(), today.getMonthValue());
+        Long monthlyPlogging = statRepository.getMonthlyPlogging(member, today.getYear(), today.getMonthValue());
 
         MainInfoRes mainInfo =MainInfoRes.builder()
                 .nickname(member.getNickname())

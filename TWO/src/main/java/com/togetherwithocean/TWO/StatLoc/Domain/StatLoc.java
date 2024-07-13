@@ -18,10 +18,10 @@ public class StatLoc {
     private Long statLocNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stat_number")
+    @JoinColumn(name = "stat_stat_number")
     private Stat stat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_number")
+    @JoinColumn(name = "location_location_number")
     private Location location;
 }
