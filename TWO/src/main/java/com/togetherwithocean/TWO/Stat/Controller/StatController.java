@@ -23,7 +23,7 @@ public class StatController {
     private final StatService statService;
 
     // 줍깅 api
-    @PostMapping("/new")
+    @PostMapping("/plog")
     ResponseEntity<Stat> savePlog(@RequestBody PostStatSaveReq postStatSaveReq, Authentication principal) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
