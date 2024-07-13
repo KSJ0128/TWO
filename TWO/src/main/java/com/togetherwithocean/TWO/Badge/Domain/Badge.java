@@ -1,9 +1,13 @@
 package com.togetherwithocean.TWO.Badge.Domain;
 
+import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -12,7 +16,8 @@ import lombok.NoArgsConstructor;
 public class Badge {
 
     @Id
-    @Column(name = "badge_number", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "badge_number")
     private Long badgeNumber;
 
     @Column(name = "badge_name")
@@ -24,9 +29,11 @@ public class Badge {
     @Column(name = "mission")
     private String mission;
 
+    @OneToMany(mappedBy = "badge")
+    private List<MemberBadge> membersList = new ArrayList<>();
+
     @Builder
-    public Badge(Long badgeNumber, String badgeName, String descript, String mission) {
-        this.badgeNumber = badgeNumber;
+    public Badge(String badgeName, String descript, String mission) {
         this.badgeName = badgeName;
         this.descript = descript;
         this.mission = mission;

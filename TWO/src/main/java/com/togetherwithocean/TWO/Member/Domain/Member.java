@@ -1,10 +1,17 @@
 package com.togetherwithocean.TWO.Member.Domain;
 
 import com.togetherwithocean.TWO.Member.Authority;
+import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
+import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
+import com.togetherwithocean.TWO.Stat.Domain.Stat;
+import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.togetherwithocean.TWO.Member.Authority.ROLE_USER;
 
@@ -26,6 +33,7 @@ public class Member {
 
     @Column(name = "email")
     private String email;
+
     @Column(name = "passwd")
     private String passwd;
 
@@ -50,20 +58,11 @@ public class Member {
     @Column(name = "step_goal")
     private Long stepGoal;
 
-    @Column(name = "daily_step")
-    private Long dailyStep;
-
     @Column(name = "avail_trash_bag")
     private Long availTrashBag;
 
     @Column(name = "total_plog")
     private Long totalPlog;
-
-    @Column(name = "monthly_plog")
-    private Long monthlyPlog;
-
-    @Column(name = "monthly_score")
-    private Long monthlyScore;
 
     @Column(name = "point")
     private Long point;
@@ -71,6 +70,14 @@ public class Member {
     @Column(name = "authority")
     private Authority authority;
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberBadge> badgesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberItem> itemsList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Stat> statList = new ArrayList<>();
 
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
@@ -86,11 +93,8 @@ public class Member {
         this.charId = charId;
         this.charName = charName;
         this.stepGoal = stepGoal;
-        this.dailyStep = 0L;
         this.availTrashBag = 10L;
         this.totalPlog = 0L;
-        this.monthlyPlog = 0L;
-        this.monthlyScore = 0L;
         this.point = 0L;
         this.authority = ROLE_USER;
     }

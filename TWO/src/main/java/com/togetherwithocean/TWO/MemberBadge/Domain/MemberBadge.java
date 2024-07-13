@@ -1,4 +1,6 @@
 package com.togetherwithocean.TWO.MemberBadge.Domain;
+import com.togetherwithocean.TWO.Badge.Domain.Badge;
+import com.togetherwithocean.TWO.Member.Domain.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -10,20 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberBadge {
     @Id
-    @Column(name = "member_number", nullable = false)
-    private Long memberNumber;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_badge_number")
+    private Long memberBadgeNumber;
 
-    @Id
-    @Column(name = "badge_number", nullable = false)
-    private Long badgeNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_number")
+    private Member member;
 
-    @Column(name = "achieve")
-    private Boolean achieve;
-
-    @Builder
-    public MemberBadge(Long memberNumber, Long badgeNumber, Boolean achieve) {
-        this.memberNumber = memberNumber;
-        this.badgeNumber = badgeNumber;
-        this.achieve = achieve;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "badge_number")
+    private Badge badge;
 }

@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Statistics.DTO;
+package com.togetherwithocean.TWO.Stat.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class GetMonthlyStatisticsRes {
+@NoArgsConstructor
+public class PostStatSaveReq {
     LocalDate date;
-    Boolean plogging;
-    Boolean step;
+    Long trashBag;
+    String location;
 }

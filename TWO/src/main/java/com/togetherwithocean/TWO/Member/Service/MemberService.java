@@ -95,8 +95,6 @@ public class MemberService {
                 .charId(member.getCharId())
                 .charName(member.getCharName())
                 .stepGoal(member.getStepGoal())
-                .dailyStep(member.getDailyStep())
-                .monthlyPlog(member.getMonthlyPlog())
                 .build();
         return mainInfo;
     }

@@ -1,5 +1,9 @@
 package com.togetherwithocean.TWO.MemberItem.Domain;
 
+import com.togetherwithocean.TWO.Item.Domain.Item;
+import com.togetherwithocean.TWO.Member.Domain.Member;
+import com.togetherwithocean.TWO.Stat.Domain.Stat;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -8,24 +12,36 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "member_item")
-@NoArgsConstructor
 public class MemberItem {
 
     @Id
-    @Column(name = "member_number", nullable = false)
-    private Long memberNumber;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_item_number")
+    private Long MemberItemNumber;
 
-    @Id
-    @Column(name = "item_number", nullable = false)
-    private Long itemNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_number")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_number")
+    private Item item;
 
     @Column(name = "equip")
-    private Boolean equip;
+    private boolean equip;
+
+    @Nullable
+    @Column(name = "pos_x")
+    private Double posX;
+
+    @Nullable
+    @Column(name = "pos_y")
+    private Double posY;
 
     @Builder
-    public MemberItem(Long memberNumber, Long itemNumber, Boolean equip) {
-        this.memberNumber = memberNumber;
-        this.itemNumber = itemNumber;
-        this.equip = equip;
+    public MemberItem() {
+        this.equip = false;
+        this.posX = null;
+        this.posY = null;
     }
 }
