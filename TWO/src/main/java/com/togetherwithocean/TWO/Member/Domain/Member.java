@@ -83,6 +83,19 @@ public class Member {
     @JsonManagedReference
     private List<Stat> statList = new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "memberNumber=" + memberNumber +
+                ", realName='" + realName + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", charName='" + charName + '\'' +
+                ", totalPlog=" + totalPlog +
+                ", point=" + point +
+                '}';
+    }
+
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
                 String address, String detailAddress, Long charId, String charName, Long stepGoal) {

@@ -32,7 +32,7 @@ public class StatController {
     }
 
     // 걸음수 갱신 api
-    @GetMapping("/walk")
+    @PostMapping("/walk")
     ResponseEntity<Stat> saveStep(@RequestBody PatchStatWalkReq patchStatWalkReq, Authentication principal) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -41,7 +41,7 @@ public class StatController {
     }
 
     // 일자별 캘린더 조회
-    @PostMapping("/daily")
+    @GetMapping("/daily")
     ResponseEntity<Stat> getPlogList(@RequestParam LocalDate date, Authentication principal) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -51,10 +51,10 @@ public class StatController {
 
     // 월별 캘린더 및 줍깅 수, 스코어 조회
     @GetMapping("/monthly")
-    public ResponseEntity<GetMonthlyStatRes> getMonthlyStat(@RequestBody GetMonthlyCalendarReq getMonthlyCalendarReq, Authentication principal) {
+    public ResponseEntity<GetMonthlyStatRes> getMonthlyStat(@RequestParam int year, @RequestParam int month, Authentication principal) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        GetMonthlyStatRes monthlyStat = statService.getMonthlyStat(getMonthlyCalendarReq, principal.getName());
+        GetMonthlyStatRes monthlyStat = statService.getMonthlyStat(year, month, principal.getName());
         if (monthlyStat == null)
             return ResponseEntity.status(HttpStatus.OK).body(null);
         else

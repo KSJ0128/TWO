@@ -22,7 +22,7 @@ public class Stat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stat_number")
-    private Long StatNumber;
+    private Long statNumber;
 
     @Column(name = "date")
     private LocalDate date;
@@ -40,13 +40,26 @@ public class Stat {
     private Long trashBag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_number")
+    @JoinColumn(name = "member_member_number")
     @JsonBackReference
     private Member member;
 
     @OneToMany(mappedBy = "stat")
     @JsonManagedReference
     private List<StatLoc> locationsList = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Stat{" +
+                "statNumber=" + statNumber +
+                ", date=" + date +
+                ", step=" + step +
+                ", achieveStep=" + achieveStep +
+                ", plogging=" + plogging +
+                ", trashBag=" + trashBag +
+                ", memberNumber=" + (member != null ? member.getMemberNumber() : null) + // member의 ID만 출력
+                '}';
+    }
 
     @Builder
     public Stat(LocalDate date, Member member) {
