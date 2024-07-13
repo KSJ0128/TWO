@@ -1,5 +1,7 @@
 package com.togetherwithocean.TWO.Stat.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.togetherwithocean.TWO.Location.Domain.Location;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
@@ -37,13 +39,13 @@ public class Stat {
     @Column(name = "trash_bag")
     private Long trashBag;
 
-    @Column(name = "memberNumber")
-    private Long memberNumber;
-
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_number")
+    @JsonBackReference
     private Member member;
 
     @OneToMany(mappedBy = "stat")
+    @JsonManagedReference
     private List<StatLoc> locationsList = new ArrayList<>();
 
     @Builder

@@ -1,5 +1,6 @@
 package com.togetherwithocean.TWO.Member.Domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.togetherwithocean.TWO.Member.Authority;
 import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
@@ -71,12 +72,15 @@ public class Member {
     private Authority authority;
 
     @OneToMany(mappedBy = "member")
+    @JsonManagedReference
     private List<MemberBadge> badgesList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
+    @JsonManagedReference
     private List<MemberItem> itemsList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
+    @JsonManagedReference
     private List<Stat> statList = new ArrayList<>();
 
     @Builder

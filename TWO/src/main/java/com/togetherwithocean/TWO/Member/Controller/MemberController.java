@@ -3,10 +3,12 @@ package com.togetherwithocean.TWO.Member.Controller;
 import com.togetherwithocean.TWO.Jwt.SecurityUtil;
 import com.togetherwithocean.TWO.Member.DTO.*;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
+import com.togetherwithocean.TWO.Stat.Service.StatService;
 import jakarta.servlet.http.HttpServletResponse;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +20,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
+
 
 @Controller
 @RequestMapping("member")
+@RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-
-
-    @Autowired
-    public MemberController(MemberService memberService, MemberRepository memberRepository) {
-        this.memberService = memberService;
-        this.memberRepository = memberRepository;
-    }
+    private final StatService statService;
 
     // 이메일 찾기 api
     @PostMapping("/find-email")
@@ -104,6 +103,8 @@ public class MemberController {
     @PostMapping("/join")
     public ResponseEntity<Member> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
         Member joinMember = memberService.save(userInfoReq);
+
+        statService.makeNewStat(joinMember, LocalDate.now());
         return ResponseEntity.status(HttpStatus.OK).body(joinMember);
     }
 

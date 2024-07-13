@@ -8,17 +8,23 @@ import com.togetherwithocean.TWO.Member.DTO.MemberJoinReq;
 import com.togetherwithocean.TWO.Member.DTO.PostSignInRes;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
+import com.togetherwithocean.TWO.Stat.Domain.Stat;
+import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final StatRepository statRepository;
     private final JwtProvider jwtProvider;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -90,11 +96,21 @@ public class MemberService {
 
     public MainInfoRes getMainInfo(String email) {
         Member member = memberRepository.findMemberByEmail(email);
+
+        LocalDate today = LocalDate.now();
+        System.out.println("today : " + today.getYear() + " " + today.getMonthValue() + " \n");
+
+        Stat stat = statRepository.findStatByMemberNumberAndDate(member.getMemberNumber(), today);
+
+        Long monthlyPlogging = statRepository.getMonthlyPlogging(member.getMemberNumber(), today.getYear(), today.getMonthValue());
+
         MainInfoRes mainInfo =MainInfoRes.builder()
                 .nickname(member.getNickname())
                 .charId(member.getCharId())
                 .charName(member.getCharName())
                 .stepGoal(member.getStepGoal())
+                .dailyStep(stat.getStep())
+                .monthlyPlog(monthlyPlogging)
                 .build();
         return mainInfo;
     }
