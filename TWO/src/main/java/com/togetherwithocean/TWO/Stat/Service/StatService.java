@@ -105,22 +105,13 @@ public class StatService {
                 .build();
         statRepository.save(stat);
     }
-
-    void setYesterdayAchieve(Member member, LocalDate date) {
-        Stat beforeStat = statRepository.findStatByMemberNumberAndDate(member.getMemberNumber(), date);
-        if (beforeStat.getStep() > member.getStepGoal())
-            beforeStat.setAchieveStep(true);
-        statRepository.save(beforeStat);
-    }
     @Scheduled(cron = "0 0 0 * * ?")
     public void initDailyAchieve() {
         List<Member> memberList = memberRepository.findAll();
         LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1);
 
         for (Member member : memberList) {
             makeNewStat(member, today);
-            setYesterdayAchieve(member, yesterday);
         }
     }
 }
