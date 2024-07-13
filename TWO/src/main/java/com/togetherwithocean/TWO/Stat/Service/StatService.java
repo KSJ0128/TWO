@@ -11,6 +11,8 @@ import com.togetherwithocean.TWO.Stat.DTO.PostStatSaveReq;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class StatService {
     private final MemberRepository memberRepository;
     private final StatRepository statRepository;
@@ -111,8 +113,9 @@ public class StatService {
         statRepository.save(beforeStat);
     }
     @Scheduled(cron = "0 0 0 * * ?")
-    public void initDailyAchieve(LocalDate today) {
+    public void initDailyAchieve() {
         List<Member> memberList = memberRepository.findAll();
+        LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
 
         for (Member member : memberList) {

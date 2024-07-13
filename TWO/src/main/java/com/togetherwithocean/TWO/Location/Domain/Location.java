@@ -21,6 +21,9 @@ public class Location {
     @Column(name = "location_number")
     private Long locationNumber;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "direction")
     private String direction;
 
