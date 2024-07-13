@@ -1,5 +1,7 @@
 package com.togetherwithocean.TWO.Stat.Service;
 
+import com.togetherwithocean.TWO.Location.Domain.Location;
+import com.togetherwithocean.TWO.Location.Repository.LocationRepository;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import com.togetherwithocean.TWO.Stat.DTO.GetMonthlyCalendarReq;
@@ -20,6 +22,7 @@ import java.util.List;
 public class StatService {
     private final MemberRepository memberRepository;
     private final StatRepository statRepository;
+    private final LocationRepository locationRepository;
 
     public Stat savePlog(String email, PostStatSaveReq postStatSaveReq) {
         Member member = memberRepository.findMemberByEmail(email);
@@ -39,6 +42,9 @@ public class StatService {
         member.setPoint(member.getPoint() + postStatSaveReq.getTrashBag() * 10000);
 
         // 추천 지역이면 추가 포인트 지급 로직 추가 필요
+        Location location = locationRepository.findLocationByName(postStatSaveReq.getLocation());
+        if (location != null)
+            // 추가 포인트
 //        member.setPoint(member.getPoint() + plogReq.getTrashBag() * 1000);
 //        member.setMonthlyScore(member.getMonthlyScore() + plogReq.getTrashBag() * 1000);
 
