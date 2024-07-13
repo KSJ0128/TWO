@@ -28,7 +28,7 @@ public class Item {
     private Long itemPrice;
 
     @OneToMany(mappedBy = "item")
-    List<MemberItem> membersList = new ArrayList<>();
+    private List<MemberItem> membersList = new ArrayList<>();
 
     @Builder
     public Item(String itemName, Long itemPrice) {

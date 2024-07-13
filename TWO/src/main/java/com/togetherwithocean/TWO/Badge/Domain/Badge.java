@@ -30,7 +30,7 @@ public class Badge {
     private String mission;
 
     @OneToMany(mappedBy = "badge")
-    List<MemberBadge> membersList = new ArrayList<>();
+    private List<MemberBadge> membersList = new ArrayList<>();
 
     @Builder
     public Badge(String badgeName, String descript, String mission) {

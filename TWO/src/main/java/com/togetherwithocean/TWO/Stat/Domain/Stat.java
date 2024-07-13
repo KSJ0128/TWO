@@ -1,6 +1,7 @@
 package com.togetherwithocean.TWO.Stat.Domain;
 
 import com.togetherwithocean.TWO.Location.Domain.Location;
+import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -39,8 +40,11 @@ public class Stat {
     @Column(name = "memberNumber")
     private Long memberNumber;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     @OneToMany(mappedBy = "stat")
-    List<StatLoc> locationsList = new ArrayList<>();
+    private List<StatLoc> locationsList = new ArrayList<>();
 
     @Builder
     public Stat(LocalDate date, Long memberNumber) {

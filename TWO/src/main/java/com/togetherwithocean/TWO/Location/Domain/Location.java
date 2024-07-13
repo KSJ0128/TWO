@@ -25,7 +25,7 @@ public class Location {
     private String direction;
 
     @OneToMany(mappedBy = "location")
-    List<StatLoc> statList = new ArrayList<>();
+    private List<StatLoc> statList = new ArrayList<>();
 
     @Builder
     public Location(String direction) {
