@@ -90,17 +90,28 @@ public class StatService {
         return new GetMonthlyStatRes(sumPlog, sumPoint, month);
     }
 
+    public void makeNewStat(Member member, LocalDate date) {
+        Stat stat = Stat.builder()
+                .member(member)
+                .date(date)
+                .build();
+        statRepository.save(stat);
+    }
+
+    void setYesterdayAchieve(Member member, LocalDate date) {
+        Stat beforeStat = statRepository.findStatByMemberNumberAndDate(member.getMemberNumber(), date);
+        if (beforeStat.getStep() > member.getStepGoal())
+            beforeStat.setAchieveStep(true);
+        statRepository.save(beforeStat);
+    }
     @Scheduled(cron = "0 0 0 * * ?")
-    public void initDailyAchieve(LocalDate date) {
-        List<Stat> statList = statRepository.findByDate(date);
+    public void initDailyAchieve(LocalDate today) {
+        List<Member> memberList = memberRepository.findAll();
+        LocalDate yesterday = today.minusDays(1);
 
-        for (int i = 0; i < statList.size(); i++) {
-            Stat stat = statList.get(i);
-            Member member = memberRepository.findMemberByMemberNumber(stat.getMemberNumber());
-            if (stat.getStep() > member.getStepGoal())
-                stat.setAchieveStep(true);
-
-            statRepository.save(stat);
+        for (Member member : memberList) {
+            makeNewStat(member, today);
+            setYesterdayAchieve(member, yesterday);
         }
     }
 }

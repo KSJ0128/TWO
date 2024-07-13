@@ -47,8 +47,8 @@ public class Stat {
     private List<StatLoc> locationsList = new ArrayList<>();
 
     @Builder
-    public Stat(LocalDate date, Long memberNumber) {
-        this.memberNumber = memberNumber;
+    public Stat(LocalDate date, Member member) {
+        this.member = member;
         this.date = date;
         this.step = 0L;
         this.achieveStep = false;
