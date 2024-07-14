@@ -24,7 +24,7 @@ public class MemberItem {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_number")
+    @JoinColumn(name = "number")
     private Item item;
 
     @Column(name = "equip")
