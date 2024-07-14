@@ -133,6 +133,15 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(mainInfo);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
+    @PatchMapping("/address")
+    public ResponseEntity<Member> changeAddress(@RequestBody PatchChangeAddress patchChangeAddress, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Member member = memberRepository.findMemberByEmail(principal.getName());
+        memberService.changeAddress(member, patchChangeAddress);
+        return ResponseEntity.status(HttpStatus.OK).body(member);
+    }
+
+//    @GetMapping("/test")
+//    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
 }
