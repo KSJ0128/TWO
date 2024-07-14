@@ -62,9 +62,13 @@ public class StatService {
         // 사용자의 걸음 갱신
         stat.setStep(stat.getStep() + patchStatWalkReq.getStep());
 
+        // 사용자 목표 걸음 성취 여부 갱신
+        if (stat.getStep() > member.getStepGoal())
+            stat.setAchieveStep(true);
+
         // 포인트, 스코어 정보 갱신
-        // 포인트 갱신 공식 의논할 필요 있음
         member.setPoint(member.getPoint() + (long)(patchStatWalkReq.getStep() * 0.01));
+
         // DB에 스코어 점수가 따로 없음 -> 속성 추가할지 아니면 해당 월, 주마다 데이터 긁어와서 계산할지 !
 
         memberRepository.save(member);
