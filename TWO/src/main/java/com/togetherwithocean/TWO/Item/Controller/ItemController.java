@@ -41,6 +41,14 @@ public class ItemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemSerivce.getItemList(principal.getName()));
     }
 
+    @GetMapping("/equip")
+    public ResponseEntity<List<MemberItemDTO>> getEquipItemList(Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(itemSerivce.getEquipItemList(principal.getName()));
+    }
+
+
 
 //    @PostMapping("/equip")
 //    public ResponseEntity<MemberItem> equipItem(@RequestBody EquipDTO equipDTO, Authentication principal) {
@@ -49,5 +57,5 @@ public class ItemController {
 //        return ResponseEntity.status(HttpStatus.OK).body(itemSerivce.equipItem(equipDTO, principal.getName()));
 //            return ResponseEntity.status(HttpStatus.OK).body("장착 성공");
 //        return ResponseEntity.status(HttpStatus.OK).body("장착 실패");
-    }
+//    }
 }

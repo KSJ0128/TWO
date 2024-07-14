@@ -1,5 +1,6 @@
 package com.togetherwithocean.TWO.Member.Service;
 
+import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Authority;
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final StatRepository statRepository;
+    private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -111,6 +113,7 @@ public class MemberService {
                 .stepGoal(member.getStepGoal())
                 .dailyStep(stat.getStep())
                 .monthlyPlog(monthlyPlogging)
+                .equipItemList(itemSerivce.getEquipItemList(email))
                 .build();
         return mainInfo;
     }

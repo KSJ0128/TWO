@@ -68,8 +68,8 @@ public class ItemSerivce {
 
         List<MemberItemDTO> memberItemDTOList = new ArrayList<>();
         for (MemberItem memberItem : memberItemList) {
-            System.out.println(memberItem.getPosY());
             MemberItemDTO memberItemDTO = MemberItemDTO.builder()
+                    .memberItemNumber(memberItem.getMemberItemNumber())
                     .memberNick(member.getNickname())
                     .itemName(memberItem.getItem().getName())
                     .equip(memberItem.isEquip())
@@ -77,6 +77,27 @@ public class ItemSerivce {
                     .posY(memberItem.getPosY())
                     .build();
             memberItemDTOList.add(memberItemDTO);
+        }
+        return memberItemDTOList;
+    }
+
+    public List<MemberItemDTO> getEquipItemList(String email) {
+        Member member = memberRepository.findMemberByEmail(email);
+        List<MemberItem> memberItemList = memberItemRepository.findMemberItemsByMember(member);
+
+        List<MemberItemDTO> memberItemDTOList = new ArrayList<>();
+        for (MemberItem memberItem : memberItemList) {
+            if (memberItem.isEquip()) {
+                MemberItemDTO memberItemDTO = MemberItemDTO.builder()
+                        .memberItemNumber(memberItem.getMemberItemNumber())
+                        .memberNick(member.getNickname())
+                        .itemName(memberItem.getItem().getName())
+                        .equip(memberItem.isEquip())
+                        .posX(memberItem.getPosX())
+                        .posY(memberItem.getPosY())
+                        .build();
+                memberItemDTOList.add(memberItemDTO);
+            }
         }
         return memberItemDTOList;
     }

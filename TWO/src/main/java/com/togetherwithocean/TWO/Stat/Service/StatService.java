@@ -30,6 +30,9 @@ public class StatService {
     public Stat savePlog(String email, PostStatSaveReq postStatSaveReq) {
         Member member = memberRepository.findMemberByEmail(email);
         Stat stat = statRepository.findStatByMemberAndDate(member, postStatSaveReq.getDate());
+        if (stat == null) // 크론이 제대로 작동하지를 않아서 우선 해당의 Stat 없으면 직접 생성
+            stat = makeNewStat(member, LocalDate.now());
+
         System.out.println(stat);
 
         // member의 상태 갱신 -> MemberService
@@ -93,12 +96,12 @@ public class StatService {
         return new GetMonthlyStatRes(monthlyPlogs, monthlyScore * 10000, monthlyStats);
     }
 
-    public void makeNewStat(Member member, LocalDate date) {
+    public Stat makeNewStat(Member member, LocalDate date) {
         Stat stat = Stat.builder()
                 .member(member)
                 .date(date)
                 .build();
-        statRepository.save(stat);
+        return statRepository.save(stat);
     }
     @Scheduled(cron = "0 0 0 * * ?")
     public void initDailyAchieve() {

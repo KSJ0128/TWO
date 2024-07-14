@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MemberItemDTO {
+    private Long memberItemNumber;
     private String memberNick;
     private String itemName;
     private boolean equip;
@@ -22,7 +23,8 @@ public class MemberItemDTO {
     private Double posY;
 
     @Builder
-    public MemberItemDTO(String memberNick, String itemName, boolean equip, Double posX, Double posY) {
+    public MemberItemDTO(Long memberItemNumber, String memberNick, String itemName, boolean equip, Double posX, Double posY) {
+        this.memberItemNumber = memberItemNumber;
         this.memberNick = memberNick;
         this.itemName = itemName;
         this.equip = equip;
