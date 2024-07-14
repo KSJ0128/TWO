@@ -5,6 +5,7 @@ import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Authority;
 import com.togetherwithocean.TWO.Member.DTO.MainInfoRes;
 import com.togetherwithocean.TWO.Member.DTO.MemberJoinReq;
+import com.togetherwithocean.TWO.Member.DTO.PatchChangeAddress;
 import com.togetherwithocean.TWO.Member.DTO.PostSignInRes;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
@@ -113,5 +114,13 @@ public class MemberService {
                 .monthlyPlog(monthlyPlogging)
                 .build();
         return mainInfo;
+    }
+
+    public void changeAddress(Member member, PatchChangeAddress patchChangeAddress) {
+        member.setPostalCode(patchChangeAddress.getPostalCode());
+        member.setAddress(patchChangeAddress.getAddress());
+        member.setDetailAddress(patchChangeAddress.getDetailAddress());
+
+        memberRepository.save(member);
     }
 }
