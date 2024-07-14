@@ -123,4 +123,10 @@ public class MemberService {
 
         memberRepository.save(member);
     }
+
+    public void changeStepGoal(Member member, Long stepGoal) {
+        member.setStepGoal(stepGoal);
+
+        memberRepository.save(member);
+    }
 }
