@@ -142,6 +142,15 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
+    @PatchMapping("/step-goal")
+    public ResponseEntity<Member> changeStepGoal(@RequestBody PatchChangeStepGoal patchChangeStepGoal, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Member member = memberRepository.findMemberByEmail(principal.getName());
+        memberService.changeStepGoal(member, patchChangeStepGoal.getStepGoal());
+        return ResponseEntity.status(HttpStatus.OK).body(member);
+    }
+
 //    @GetMapping("/test")
 //    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
 }
