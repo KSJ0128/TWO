@@ -1,5 +1,7 @@
 package com.togetherwithocean.TWO.MemberItem.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.togetherwithocean.TWO.Item.Domain.Item;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "member_item")
 public class MemberItem {
 
@@ -21,10 +24,12 @@ public class MemberItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_number")
+    @JsonBackReference
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "number")
+    @JoinColumn(name = "item_number")
+    @JsonBackReference
     private Item item;
 
     @Column(name = "equip")
@@ -39,7 +44,9 @@ public class MemberItem {
     private Double posY;
 
     @Builder
-    public MemberItem() {
+    public MemberItem(Member member, Item item) {
+        this.member = member;
+        this.item = item;
         this.equip = false;
         this.posX = null;
         this.posY = null;

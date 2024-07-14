@@ -19,8 +19,8 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "number", nullable = false)
-    private Long number;
+    @Column(name = "item_number")
+    private Long ItemNumber;
 
     @Column(name = "name")
     private String name;
@@ -39,8 +39,9 @@ public class Item {
     private List<MemberItem> membersList = new ArrayList<>();
 
     @Builder
-    public Item(String name, Long price, String category) {
+    public Item(String name, String nameKr, Long price, String category) {
         this.name = name;
+        this.nameKr = nameKr;
         this.price = price;
         this.category = category;
     }
