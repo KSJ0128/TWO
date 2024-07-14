@@ -6,14 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class EquipDTO {
-    private String itemName;
+public class DecoDTO {
+    private Long memberItemNumber;
+    private boolean equip;
     private Double posX;
     private Double posY;
 
     @Builder
-    public EquipDTO(String itemName, Double posX, double posY) {
-        this.itemName = itemName;
+    public DecoDTO(Long memberItemNumber, boolean equip, Double posX, double posY) {
+        this.memberItemNumber = memberItemNumber;
+        this.equip = equip;
         this.posX = posX;
         this.posY = posY;
     }

@@ -1,7 +1,7 @@
 package com.togetherwithocean.TWO.Item.Service;
 
 import com.togetherwithocean.TWO.Item.DTO.BuyResDTO;
-import com.togetherwithocean.TWO.Item.DTO.EquipDTO;
+import com.togetherwithocean.TWO.Item.DTO.DecoDTO;
 import com.togetherwithocean.TWO.Item.DTO.ItemDTO;
 import com.togetherwithocean.TWO.Item.Domain.Item;
 import com.togetherwithocean.TWO.Item.Repository.ItemRepository;
@@ -102,21 +102,14 @@ public class ItemSerivce {
         return memberItemDTOList;
     }
 
-//    public MemberItem equipItem(EquipDTO equipDTO, String email) {
-//        Member member = memberRepository.findMemberByEmail(email);
-//        Item item = itemRepository.findItemByName(equipDTO.getItemName());
-//
-//        List<MemberItem> memberItemList = memberItemRepository.findMemberItemsByMemberAndItem(member, item);
-//
-//        for (MemberItem memberItem : memberItemList) {
-//            if ((memberItem.getItem().getName()).equals(equipDTO.getItemName())) { // 장착하려는 아이템인지
-//                    memberItem.setEquip(true);
-//                    memberItem.setPosX(equipDTO.getPosX());
-//                    memberItem.setPosY(equipDTO.getPosY());
-//                    memberItemRepository.save(memberItem);
-//                    return memberItem;
-//            }
-//        }
-//        return null;
-//    }
+    public List<MemberItemDTO> decoItem(DecoDTO decoDTO, String email) {
+        MemberItem memberItem = memberItemRepository.findByMemberItemNumber(decoDTO.getMemberItemNumber());
+        memberItem.setEquip(decoDTO.isEquip());
+        memberItem.setPosX(decoDTO.getPosX());
+        memberItem.setPosY(decoDTO.getPosY());
+        memberItemRepository.save(memberItem);
+
+        return getItemList(email);
+    }
 }
+

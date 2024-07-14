@@ -1,7 +1,7 @@
 package com.togetherwithocean.TWO.Item.Controller;
 
 import com.togetherwithocean.TWO.Item.DTO.BuyResDTO;
-import com.togetherwithocean.TWO.Item.DTO.EquipDTO;
+import com.togetherwithocean.TWO.Item.DTO.DecoDTO;
 import com.togetherwithocean.TWO.Item.DTO.ItemDTO;
 import com.togetherwithocean.TWO.Item.Domain.Item;
 import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
@@ -48,14 +48,10 @@ public class ItemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemSerivce.getEquipItemList(principal.getName()));
     }
 
-
-
-//    @PostMapping("/equip")
-//    public ResponseEntity<MemberItem> equipItem(@RequestBody EquipDTO equipDTO, Authentication principal) {
-//        if (principal == null)
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        return ResponseEntity.status(HttpStatus.OK).body(itemSerivce.equipItem(equipDTO, principal.getName()));
-//            return ResponseEntity.status(HttpStatus.OK).body("장착 성공");
-//        return ResponseEntity.status(HttpStatus.OK).body("장착 실패");
-//    }
+    @PostMapping("/deco")
+    public ResponseEntity<List<MemberItemDTO>> equipItem(@RequestBody DecoDTO decoDTO, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(itemSerivce.decoItem(decoDTO, principal.getName()));
+    }
 }

@@ -11,4 +11,5 @@ public interface MemberItemRepository extends JpaRepository<MemberItem, Long> {
     List<MemberItem> findMemberItemsByMemberAndItem(Member member, Item item);
     List<MemberItem> findMemberItemsByMember(Member member);
 
+    MemberItem findByMemberItemNumber(Long memberItemNumber);
 }
