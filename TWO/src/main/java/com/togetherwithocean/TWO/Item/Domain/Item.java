@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Getter @Setter
 @Table(name = "item")
 @NoArgsConstructor
 public class Item {

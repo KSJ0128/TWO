@@ -7,12 +7,10 @@ import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Entity
+@Getter @Setter
 @NoArgsConstructor
 @Table(name = "member_item")
 public class MemberItem {
