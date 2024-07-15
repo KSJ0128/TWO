@@ -7,17 +7,15 @@ import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.togetherwithocean.TWO.Member.Authority.ROLE_USER;
 
-@Data
 @Entity
+@Getter @Setter
 @Table(name = "member")
 @NoArgsConstructor
 public class Member {
@@ -82,19 +80,6 @@ public class Member {
     @OneToMany(mappedBy = "member")
     @JsonManagedReference
     private List<Stat> statList = new ArrayList<>();
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "memberNumber=" + memberNumber +
-                ", realName='" + realName + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", email='" + email + '\'' +
-                ", charName='" + charName + '\'' +
-                ", totalPlog=" + totalPlog +
-                ", point=" + point +
-                '}';
-    }
 
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
