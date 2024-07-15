@@ -3,12 +3,11 @@ package com.togetherwithocean.TWO.StatLoc.Domain;
 import com.togetherwithocean.TWO.Location.Domain.Location;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "stat_loc")
 @NoArgsConstructor
 public class StatLoc {

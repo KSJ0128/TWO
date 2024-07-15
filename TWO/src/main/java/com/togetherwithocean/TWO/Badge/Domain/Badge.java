@@ -2,14 +2,12 @@ package com.togetherwithocean.TWO.Badge.Domain;
 
 import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter @Setter
 @Entity
 @Table(name = "badge")
 @NoArgsConstructor
