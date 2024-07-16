@@ -33,6 +33,8 @@ public class SecurityConfig {
                 .requestMatchers("/member/sign-in", "/member/join",
                         "/member/check-email", "/member/check-nick",
                         "member/find-email", "member/find-pw",
+                        "certify/send-sms", "certify/send-email",
+                        "certify/confirm-sms", "certify/confirm-sms",
                         "/oauth/kakao/login", "/oauth/kakao/callback",
                         "/item/*"
                 ).permitAll()
