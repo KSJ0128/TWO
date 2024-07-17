@@ -10,6 +10,7 @@ import com.togetherwithocean.TWO.Member.DTO.PatchChangeAddress;
 import com.togetherwithocean.TWO.Member.DTO.PostSignInRes;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
+import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,6 +55,8 @@ public class MemberService {
         if (!memberSave.getPasswd().equals(memberSave.getCheckPasswd()))
             return null; // 비밀번호가 일치하지 않습니다
 
+        Ranking ranking = Ranking.builder().build();
+
         System.out.println("비밀번호 일치?");
         Member member = Member.builder()
                 .realName(memberSave.getRealName())
@@ -67,7 +70,11 @@ public class MemberService {
                 .charId(memberSave.getCharId())
                 .charName(memberSave.getCharName())
                 .stepGoal(memberSave.getStepGoal())
+                .ranking(ranking)
                 .build();
+
+        ranking.setMember(member);
+
         memberRepository.save(member);
         return member;
     }

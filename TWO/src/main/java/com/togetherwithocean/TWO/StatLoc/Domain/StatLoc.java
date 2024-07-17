@@ -1,6 +1,6 @@
 package com.togetherwithocean.TWO.StatLoc.Domain;
 
-import com.togetherwithocean.TWO.Location.Domain.Location;
+import com.togetherwithocean.TWO.Visit.Domain.Visit;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +21,6 @@ public class StatLoc {
     private Stat stat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_location_number")
-    private Location location;
+    @JoinColumn(name = "visit_visit_number")
+    private Visit visit;
 }

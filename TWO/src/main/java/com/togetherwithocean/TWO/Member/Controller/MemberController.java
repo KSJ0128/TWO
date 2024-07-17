@@ -3,6 +3,7 @@ package com.togetherwithocean.TWO.Member.Controller;
 import com.togetherwithocean.TWO.Jwt.SecurityUtil;
 import com.togetherwithocean.TWO.Member.DTO.*;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
+import com.togetherwithocean.TWO.Ranking.Service.RankingService;
 import com.togetherwithocean.TWO.Stat.Service.StatService;
 import jakarta.servlet.http.HttpServletResponse;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
@@ -30,6 +31,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final StatService statService;
+    private final RankingService rankingService;
 
     // 이메일 찾기 api
     @PostMapping("/find-email")
@@ -104,7 +106,8 @@ public class MemberController {
     public ResponseEntity<Member> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
         Member joinMember = memberService.save(userInfoReq);
 
-        statService.makeNewStat(joinMember, LocalDate.now());
+        statService.makeNewStat(joinMember, LocalDate.now()); // 당일 stat 생성
+//        rankingService.makeNewRanking(joinMember); // 랭킹 정보 등록
         return ResponseEntity.status(HttpStatus.OK).body(joinMember);
     }
 
@@ -115,7 +118,7 @@ public class MemberController {
         Member loginMember = memberRepository.findMemberByEmail(postSignInReq.getEmail());
 
         // 유효하지 않은 로그인 요청인 경우
-        if (loginMember == null && loginMember.getPasswd().equals(postSignInReq.getPasswd()))
+        if (loginMember == null || !loginMember.getPasswd().equals(postSignInReq.getPasswd()))
             return ResponseEntity.status(HttpStatus.OK).body(null);
 
         // 토큰 생성 및 헤더에 토큰 정보 추가

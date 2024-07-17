@@ -1,5 +1,6 @@
 package com.togetherwithocean.TWO.Member.Repository;
 import com.togetherwithocean.TWO.Member.Domain.Member;
+import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByNickname(String nickname);
     boolean existsByEmail(String email);
     Member findMemberByEmail(String email);
-    Member findMemberByMemberNumber(Long memberNumber);
+    Long findRankingNumberByEmail(String email);
 }

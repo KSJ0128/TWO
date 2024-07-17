@@ -1,14 +1,11 @@
 package com.togetherwithocean.TWO.Stat.Repository;
 
 import com.togetherwithocean.TWO.Member.Domain.Member;
-import com.togetherwithocean.TWO.Stat.DTO.GetMonthlyStatRes;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 
 public interface StatRepository extends JpaRepository<Stat, Long> {
