@@ -83,7 +83,10 @@ public class Member {
     @JsonManagedReference
     private List<Stat> statList = new ArrayList<>();
 
-    @OneToOne
+//    @OneToOne
+//    @JoinColumn(name = "ranking_ranking_number", unique = true)
+//    private Ranking ranking;
+    @OneToOne(cascade = CascadeType.ALL) // CascadeType.ALL을 사용하여 Ranking 엔티티가 자동으로 저장되도록 함
     @JoinColumn(name = "ranking_ranking_number", unique = true)
     private Ranking ranking;
 
@@ -93,7 +96,7 @@ public class Member {
 
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,
-                String address, String detailAddress, Long charId, String charName, Long stepGoal) {
+                String address, String detailAddress, Long charId, String charName, Long stepGoal, Ranking ranking) {
         this.realName = realName;
         this.nickname = nickname;
         this.email = email;
@@ -108,6 +111,7 @@ public class Member {
         this.availTrashBag = 10L;
         this.totalPlog = 0L;
         this.point = 0L;
+        this.ranking = ranking;
         this.authority = ROLE_USER;
     }
 }

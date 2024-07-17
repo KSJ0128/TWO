@@ -107,7 +107,7 @@ public class MemberController {
         Member joinMember = memberService.save(userInfoReq);
 
         statService.makeNewStat(joinMember, LocalDate.now()); // 당일 stat 생성
-        rankingService.makeNewRanking(joinMember); // 랭킹 정보 등록
+//        rankingService.makeNewRanking(joinMember); // 랭킹 정보 등록
         return ResponseEntity.status(HttpStatus.OK).body(joinMember);
     }
 
