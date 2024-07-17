@@ -54,6 +54,7 @@ public class StatService {
             ranking.setScore(ranking.getScore() + postStatSaveReq.getTrashBag() * 50000);
         }
 
+        rankingRepository.save(ranking);
         memberRepository.save(member);
         statRepository.save(stat);
         return stat;
@@ -77,6 +78,7 @@ public class StatService {
         member.setPoint(member.getPoint() + (long)(patchStatWalkReq.getStep() * 0.01));
         ranking.setScore(ranking.getScore() + patchStatWalkReq.getStep());
 
+        rankingRepository.save(ranking);
         memberRepository.save(member);
         statRepository.save(stat);
         return stat;

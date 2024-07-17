@@ -46,7 +46,7 @@ public class CertifyController {
     }
 
     // 문자 - 인증 번호 확인 api
-    @GetMapping("/confirm-sms")
+    @PostMapping("/confirm-sms")
     public ResponseEntity<String> confirmSmsToFindEmail(@RequestBody GetConfirmSmsReq getConfirmSmsReq) {
         // redis에서 키 값에 해당하는 전화번호 통해 생성된 인증번호 불러옴
         String redisNumber = certifyService.getSmsCertification(getConfirmSmsReq.getPhoneNumber());
@@ -83,7 +83,7 @@ public class CertifyController {
     }
 
     // 이메일 - 인증 번호 확인 api
-    @GetMapping("confirm-email")
+    @PostMapping("confirm-email")
     public ResponseEntity<String> confirmEmailToFindPasswd(@RequestBody GetConfirmEmailReq getConfirmEmailReq) {
         // redis에서 키 값에 해당하는 전화번호 통해 생성된 인증번호 불러옴
         String redisNumber = certifyService.getEmailCertification(getConfirmEmailReq.getEmail());

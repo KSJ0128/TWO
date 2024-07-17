@@ -49,22 +49,10 @@ public class Stat {
     @JsonManagedReference
     private List<StatLoc> locationsList = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "Stat{" +
-                "statNumber=" + statNumber +
-                ", date=" + date +
-                ", step=" + step +
-                ", achieveStep=" + achieveStep +
-                ", plogging=" + plogging +
-                ", trashBag=" + trashBag +
-                ", memberNumber=" + (member != null ? member.getMemberNumber() : null) + // member의 ID만 출력
-                '}';
-    }
-
     @Builder
     public Stat(LocalDate date, Member member) {
         this.member = member;
+        this.attend = false;
         this.date = date;
         this.step = 0L;
         this.achieveStep = false;
