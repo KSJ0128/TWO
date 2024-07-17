@@ -2,7 +2,6 @@ package com.togetherwithocean.TWO.Stat.Domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.togetherwithocean.TWO.Location.Domain.Location;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
 import jakarta.persistence.*;
@@ -25,6 +24,9 @@ public class Stat {
 
     @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "attend")
+    private Boolean attend;
 
     @Column(name = "step")
     private Long step;

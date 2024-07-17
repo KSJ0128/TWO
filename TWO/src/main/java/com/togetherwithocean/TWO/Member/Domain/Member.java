@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.togetherwithocean.TWO.Member.Authority;
 import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
+import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
+import com.togetherwithocean.TWO.Visit.Domain.Visit;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -80,6 +82,14 @@ public class Member {
     @OneToMany(mappedBy = "member")
     @JsonManagedReference
     private List<Stat> statList = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "ranking_ranking_number", unique = true)
+    private Ranking ranking;
+
+    @OneToMany(mappedBy = "member")
+    @JsonManagedReference
+    private List<Visit> visitList = new ArrayList<>();
 
     @Builder
     public Member(String realName, String nickname, String email, String passwd, String phoneNumber, String postalCode,

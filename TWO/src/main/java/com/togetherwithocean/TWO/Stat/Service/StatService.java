@@ -1,39 +1,39 @@
 package com.togetherwithocean.TWO.Stat.Service;
 
-import com.togetherwithocean.TWO.Location.Domain.Location;
-import com.togetherwithocean.TWO.Location.Repository.LocationRepository;
+import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
+import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
+import com.togetherwithocean.TWO.Recommend.Domain.Recommend;
+import com.togetherwithocean.TWO.Stat.RecommendRepository;
+import com.togetherwithocean.TWO.Visit.Repository.LocationRepository;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
-import com.togetherwithocean.TWO.Stat.DTO.GetMonthlyCalendarReq;
 import com.togetherwithocean.TWO.Stat.DTO.GetMonthlyStatRes;
 import com.togetherwithocean.TWO.Stat.DTO.PatchStatWalkReq;
 import com.togetherwithocean.TWO.Stat.DTO.PostStatSaveReq;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class StatService {
+    @Autowired
     private final MemberRepository memberRepository;
     private final StatRepository statRepository;
-    private final LocationRepository locationRepository;
+    private final RankingRepository rankingRepository;
+    private final RecommendRepository recommendRepository;
 
     public Stat savePlog(String email, PostStatSaveReq postStatSaveReq) {
         Member member = memberRepository.findMemberByEmail(email);
         Stat stat = statRepository.findStatByMemberAndDate(member, postStatSaveReq.getDate());
-        if (stat == null) // 크론이 제대로 작동하지를 않아서 우선 해당의 Stat 없으면 직접 생성
-            stat = makeNewStat(member, LocalDate.now());
-
-        System.out.println(stat);
+        Long rankingNumber = memberRepository.findRankingNumberByEmail(member.getEmail());
+        Ranking ranking = rankingRepository.findRankingByRankingNumber(rankingNumber);
 
         // member의 상태 갱신 -> MemberService
         // 신청 가능 쓰레기 봉투 수, 일 쓰레기봉투 수, 일 줍깅 수, 총 줍깅 수 갱신
@@ -43,16 +43,18 @@ public class StatService {
         member.setTotalPlog(member.getTotalPlog() + 1);
 
         // 포인트 및 스코어 갱신
-        // 포인트 갱신 공식 의논할 필요 있음
         member.setPoint(member.getPoint() + postStatSaveReq.getTrashBag() * 100);
+        ranking.setScore(ranking.getScore() + postStatSaveReq.getTrashBag() * 10000);
 
-        // 추천 지역이면 추가 포인트 지급 로직 추가 필요
-//        Location location = locationRepository.findLocationByName(postStatSaveReq.getLocation());
-//        if (location != null)
-            // 추가 포인트
 
-        // DB에 스코어 점수가 따로 없음 -> 속성 추가할지 아니면 해당 월, 주마다 데이터 긁어와서 계산할지 !
-//      member.setMonthlyScore(member.getMonthlyScore() + plogReq.getTrashBag() * 1000);
+        // 추천 지역이면 추가 포인트 및 스코어
+        Recommend recommend = recommendRepository.findRecommendByName(postStatSaveReq.getLocation());
+        if (recommend != null) {
+            member.setPoint(member.getPoint() + postStatSaveReq.getTrashBag() * 500);
+            ranking.setScore(ranking.getScore() + postStatSaveReq.getTrashBag() * 50000);
+        }
+
+        memberRepository.save(member);
         statRepository.save(stat);
         return stat;
     }
@@ -61,6 +63,8 @@ public class StatService {
     public Stat saveStep(PatchStatWalkReq patchStatWalkReq, String email) {
         Member member = memberRepository.findMemberByEmail(email);
         Stat stat = statRepository.findStatByMemberAndDate(member, patchStatWalkReq.getDate());
+        Long rankingNumber = memberRepository.findRankingNumberByEmail(member.getEmail());
+        Ranking ranking = rankingRepository.findRankingByRankingNumber(rankingNumber);
 
         // 사용자의 걸음 갱신
         stat.setStep(stat.getStep() + patchStatWalkReq.getStep());
@@ -71,8 +75,7 @@ public class StatService {
 
         // 포인트, 스코어 정보 갱신
         member.setPoint(member.getPoint() + (long)(patchStatWalkReq.getStep() * 0.01));
-
-        // DB에 스코어 점수가 따로 없음 -> 속성 추가할지 아니면 해당 월, 주마다 데이터 긁어와서 계산할지 !
+        ranking.setScore(ranking.getScore() + patchStatWalkReq.getStep());
 
         memberRepository.save(member);
         statRepository.save(stat);
@@ -88,15 +91,14 @@ public class StatService {
 
     public GetMonthlyStatRes getMonthlyStat(int year, int month, String email) {
         Member member = memberRepository.findMemberByEmail(email);
+        Long rankingNumber = memberRepository.findRankingNumberByEmail(member.getEmail());
+        Ranking ranking = rankingRepository.findRankingByRankingNumber(rankingNumber);
 
         // Calendar DB에서 특정 유저의 특정 월에 속하는 데이터 리스트 가져옴
         Long monthlyPlogs =  statRepository.getMonthlyPlogging(member, year, month);
-        Long monthlyScore =  statRepository.getMonthlyTrashBag(member, year, month);
+        Long monthlyScore =  ranking.getScore();
         List<Stat> monthlyStats = statRepository.getMonthlyStat(member, year, month);
 
-        // Score 계산
-        // 추후엔 랭킹 DB 만들어서 거기서 뽑아오면 될 듯
-        // 지금은 임의로 로직 작성해두겠음
         return new GetMonthlyStatRes(monthlyPlogs, monthlyScore * 10000, monthlyStats);
     }
 
@@ -116,4 +118,6 @@ public class StatService {
             makeNewStat(member, today);
         }
     }
+
+    // 출석 처리 함수 필요
 }
