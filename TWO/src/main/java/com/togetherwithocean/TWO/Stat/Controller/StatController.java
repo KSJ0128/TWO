@@ -1,9 +1,6 @@
 package com.togetherwithocean.TWO.Stat.Controller;
 
-import com.togetherwithocean.TWO.Stat.DTO.GetMonthlyCalendarReq;
-import com.togetherwithocean.TWO.Stat.DTO.GetMonthlyStatRes;
-import com.togetherwithocean.TWO.Stat.DTO.PatchStatWalkReq;
-import com.togetherwithocean.TWO.Stat.DTO.PostStatSaveReq;
+import com.togetherwithocean.TWO.Stat.DTO.*;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Service.StatService;
 import lombok.AllArgsConstructor;
@@ -24,20 +21,20 @@ public class StatController {
 
     // 줍깅 api
     @PostMapping("/plog")
-    ResponseEntity<Stat> savePlog(@RequestBody PostStatSaveReq postStatSaveReq, Authentication principal) {
+    ResponseEntity<StatRes> savePlog(@RequestBody PostStatSaveReq postStatSaveReq, Authentication principal) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        Stat plog = statService.savePlog(principal.getName(), postStatSaveReq);
-        return ResponseEntity.status(HttpStatus.OK).body(plog);
+        StatRes statRes = statService.savePlog(principal.getName(), postStatSaveReq);
+        return ResponseEntity.status(HttpStatus.OK).body(statRes);
     }
 
     // 걸음수 갱신 api
     @PostMapping("/walk")
-    ResponseEntity<Stat> saveStep(@RequestBody PatchStatWalkReq patchStatWalkReq, Authentication principal) {
+    ResponseEntity<StatRes> saveStep(@RequestBody PatchStatWalkReq patchStatWalkReq, Authentication principal) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        Stat stat = statService.saveStep(patchStatWalkReq, principal.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(stat);
+        StatRes statRes = statService.saveStep(patchStatWalkReq, principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(statRes);
     }
 
     // 일자별 캘린더 조회

@@ -32,7 +32,7 @@ public class Stat {
     private Long step;
 
     @Column(name = "achieve_step")
-    private boolean achieveStep;
+    private Boolean achieveStep;
 
     @Column(name = "plogging")
     private Long plogging;
