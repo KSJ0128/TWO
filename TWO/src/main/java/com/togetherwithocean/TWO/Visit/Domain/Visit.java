@@ -30,6 +30,12 @@ public class Visit {
     @Column(name = "date")
     private LocalDate date;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longtitude")
+    private Double longtitude;
+
     @OneToMany(mappedBy = "visit")
     private List<StatLoc> statList = new ArrayList<>();
 
