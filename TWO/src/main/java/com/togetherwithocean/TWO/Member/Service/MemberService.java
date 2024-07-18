@@ -157,4 +157,30 @@ public class MemberService {
 
         memberRepository.save(member);
     }
+
+    public MemberRes changeMypage(Member member, PatchChangeMypage patchChangeMypage) {
+        member.setNickname(patchChangeMypage.getNickname());
+        member.setPasswd(patchChangeMypage.getPasswd());
+        member.setPhoneNumber(patchChangeMypage.getPhoneNumber());
+        memberRepository.save(member);
+
+        MemberRes memberRes = MemberRes.builder()
+                .realName(member.getRealName())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .passwd(member.getPasswd())
+                .phoneNumber(member.getPhoneNumber())
+                .postalCode(member.getPostalCode())
+                .address(member.getAddress())
+                .detailAddress(member.getDetailAddress())
+                .charId(member.getCharId())
+                .charName(member.getCharName())
+                .stepGoal(member.getStepGoal())
+                .availTrashBag(member.getAvailTrashBag())
+                .totalPlog(member.getTotalPlog())
+                .point(member.getPoint())
+                .build();
+
+        return memberRes;
+    }
 }

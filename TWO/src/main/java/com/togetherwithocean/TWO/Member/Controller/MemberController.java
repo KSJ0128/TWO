@@ -170,6 +170,19 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
+    @PatchMapping("/mypage")
+    public ResponseEntity<MemberRes> changeMypage(@RequestBody PatchChangeMypage patchChangeMypage, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Member member = memberRepository.findMemberByEmail(principal.getName());
+
+        if (!patchChangeMypage.getPasswd().equals(patchChangeMypage.getRePasswd()))
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+
+        MemberRes memberRes = memberService.changeMypage(member, patchChangeMypage);
+        return ResponseEntity.status(HttpStatus.OK).body(memberRes);
+    }
+
 //    @GetMapping("/test")
 //    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
 }
