@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 public class PostFindMemberEmailReq {
     String realName;
     String phoneNumber;
-    Boolean confirm;
 
     @Builder
-    public PostFindMemberEmailReq(String realName, String phoneNumber, Boolean confirm) {
+    public PostFindMemberEmailReq(String realName, String phoneNumber) {
         this.realName = realName;
         this.phoneNumber = phoneNumber;
-        this.confirm = confirm;
     }
 }

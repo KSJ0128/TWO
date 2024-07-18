@@ -47,11 +47,7 @@ public class MemberController {
         if (!findMember.getPhoneNumber().equals(postFindMemberEmailReq.getPhoneNumber()))
             return ResponseEntity.status(HttpStatus.OK).body("가입된 유저가 아닙니다.");
 
-        // 인증 번호 확인 유무 체크
-        if (postFindMemberEmailReq.getConfirm())
-            return ResponseEntity.status(HttpStatus.OK).body(findMember.getNickname() + "님의 이메일은 " + findMember.getEmail() + " 입니다.");
-        else
-            return ResponseEntity.status(HttpStatus.OK).body("인증 번호 확인이 되지 않았습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(findMember.getNickname() + "님의 이메일은 " + findMember.getEmail() + " 입니다.");
     }
 
     // 비밀번호 찾기 api
@@ -67,10 +63,6 @@ public class MemberController {
         // DB 상의 유저 정보와 일치하는지 확인 - 유저명과 유저 이메일이 같은 유저 가리키는지
         if (!findMember.getEmail().equals(postFindMemberPasswdReq.getEmail()))
             return ResponseEntity.status(HttpStatus.OK).body("가입된 유저가 아닙니다.");
-
-        // 인증 번호 확인 유무 체크
-        if (!postFindMemberPasswdReq.getConfirm())
-            return ResponseEntity.status(HttpStatus.OK).body("인증 번호 확인이 되지 않았습니다.");
 
         // 비밀번호 일치 확인
         if (postFindMemberPasswdReq.getPasswd().equals(postFindMemberPasswdReq.getRe_passwd())) {
