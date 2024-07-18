@@ -13,6 +13,11 @@ java {
 	}
 }
 
+/* 빌드 시 plain.jar 파일 생성 안하도록 */
+jar {
+	enabled = false
+}
+
 repositories {
 	mavenCentral()
 }
