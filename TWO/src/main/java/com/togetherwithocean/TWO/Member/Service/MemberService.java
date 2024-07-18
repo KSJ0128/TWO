@@ -144,17 +144,80 @@ public class MemberService {
         return mainInfo;
     }
 
-    public void changeAddress(Member member, PatchChangeAddress patchChangeAddress) {
+    public MemberRes changeAddress(Member member, PatchChangeAddress patchChangeAddress) {
         member.setPostalCode(patchChangeAddress.getPostalCode());
         member.setAddress(patchChangeAddress.getAddress());
         member.setDetailAddress(patchChangeAddress.getDetailAddress());
 
         memberRepository.save(member);
+
+        MemberRes memberRes = MemberRes.builder()
+                .realName(member.getRealName())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .passwd(member.getPasswd())
+                .phoneNumber(member.getPhoneNumber())
+                .postalCode(member.getPostalCode())
+                .address(member.getAddress())
+                .detailAddress(member.getDetailAddress())
+                .charId(member.getCharId())
+                .charName(member.getCharName())
+                .stepGoal(member.getStepGoal())
+                .availTrashBag(member.getAvailTrashBag())
+                .totalPlog(member.getTotalPlog())
+                .point(member.getPoint())
+                .build();
+
+        return memberRes;
     }
 
-    public void changeStepGoal(Member member, Long stepGoal) {
+    public MemberRes changeStepGoal(Member member, Long stepGoal) {
         member.setStepGoal(stepGoal);
-
         memberRepository.save(member);
+
+        MemberRes memberRes = MemberRes.builder()
+                .realName(member.getRealName())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .passwd(member.getPasswd())
+                .phoneNumber(member.getPhoneNumber())
+                .postalCode(member.getPostalCode())
+                .address(member.getAddress())
+                .detailAddress(member.getDetailAddress())
+                .charId(member.getCharId())
+                .charName(member.getCharName())
+                .stepGoal(member.getStepGoal())
+                .availTrashBag(member.getAvailTrashBag())
+                .totalPlog(member.getTotalPlog())
+                .point(member.getPoint())
+                .build();
+
+        return memberRes;
+    }
+
+    public MemberRes changeMypage(Member member, PatchChangeMypage patchChangeMypage) {
+        member.setNickname(patchChangeMypage.getNickname());
+        member.setPasswd(patchChangeMypage.getPasswd());
+        member.setPhoneNumber(patchChangeMypage.getPhoneNumber());
+        memberRepository.save(member);
+
+        MemberRes memberRes = MemberRes.builder()
+                .realName(member.getRealName())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .passwd(member.getPasswd())
+                .phoneNumber(member.getPhoneNumber())
+                .postalCode(member.getPostalCode())
+                .address(member.getAddress())
+                .detailAddress(member.getDetailAddress())
+                .charId(member.getCharId())
+                .charName(member.getCharName())
+                .stepGoal(member.getStepGoal())
+                .availTrashBag(member.getAvailTrashBag())
+                .totalPlog(member.getTotalPlog())
+                .point(member.getPoint())
+                .build();
+
+        return memberRes;
     }
 }
