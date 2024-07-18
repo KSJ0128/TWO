@@ -4,13 +4,11 @@ import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Authority;
-import com.togetherwithocean.TWO.Member.DTO.MainInfoRes;
-import com.togetherwithocean.TWO.Member.DTO.MemberJoinReq;
-import com.togetherwithocean.TWO.Member.DTO.PatchChangeAddress;
-import com.togetherwithocean.TWO.Member.DTO.PostSignInRes;
+import com.togetherwithocean.TWO.Member.DTO.*;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
+import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +26,7 @@ import java.time.LocalDate;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final StatRepository statRepository;
+    private final RankingRepository rankingRepository;
     private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -48,7 +47,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Member save(MemberJoinReq memberSave) {
+    public MemberRes save(MemberJoinReq memberSave) {
         System.out.println(memberSave.getPasswd() + " "+ memberSave.getCheckPasswd());
 
         // 비밀번호 일치 여부 예외처리?
@@ -73,10 +72,29 @@ public class MemberService {
                 .ranking(ranking)
                 .build();
 
-        ranking.setMember(member);
-
         memberRepository.save(member);
-        return member;
+
+        ranking.setMember(member);
+        rankingRepository.save(ranking);
+
+        MemberRes memberRes = MemberRes.builder()
+                .realName(member.getRealName())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .passwd(member.getPasswd())
+                .phoneNumber(member.getPhoneNumber())
+                .postalCode(member.getPostalCode())
+                .address(member.getAddress())
+                .detailAddress(member.getDetailAddress())
+                .charId(member.getCharId())
+                .charName(member.getCharName())
+                .stepGoal(member.getStepGoal())
+                .availTrashBag(member.getAvailTrashBag())
+                .totalPlog(member.getTotalPlog())
+                .point(member.getPoint())
+                .build();
+
+        return memberRes;
     }
  
     @Transactional
@@ -100,8 +118,8 @@ public class MemberService {
         return jwtToken;
     }
 
-    public PostSignInRes setSignInInfo(Member loginMember, TokenDto token) {
-        return new PostSignInRes(loginMember, token);
+    public PostSignInRes setSignInInfo(MemberRes memberRes, TokenDto token) {
+        return new PostSignInRes(memberRes, token);
     }
 
     public MainInfoRes getMainInfo(String email) {

@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PostSignInRes {
-    Member member;
+    MemberRes memberRes;
     TokenDto token;
 
     @Builder
-    public PostSignInRes(Member member, TokenDto token) {
-        this.member = member;
+    public PostSignInRes(MemberRes memberRes, TokenDto token) {
+        this.memberRes = memberRes;
         this.token = token;
     }
 }

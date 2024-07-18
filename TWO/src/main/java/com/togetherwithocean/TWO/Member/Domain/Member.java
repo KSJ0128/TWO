@@ -86,7 +86,7 @@ public class Member {
 //    @OneToOne
 //    @JoinColumn(name = "ranking_ranking_number", unique = true)
 //    private Ranking ranking;
-    @OneToOne(cascade = CascadeType.ALL) // CascadeType.ALL을 사용하여 Ranking 엔티티가 자동으로 저장되도록 함
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // CascadeType.ALL을 사용하여 Ranking 엔티티가 자동으로 저장되도록 함
     @JoinColumn(name = "ranking_ranking_number", unique = true)
     private Ranking ranking;
 
@@ -108,7 +108,7 @@ public class Member {
         this.charId = charId;
         this.charName = charName;
         this.stepGoal = stepGoal;
-        this.availTrashBag = 10L;
+        this.availTrashBag = 0L;
         this.totalPlog = 0L;
         this.point = 0L;
         this.ranking = ranking;

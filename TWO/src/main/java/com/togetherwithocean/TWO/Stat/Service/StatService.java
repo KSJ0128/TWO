@@ -3,15 +3,19 @@ package com.togetherwithocean.TWO.Stat.Service;
 import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
 import com.togetherwithocean.TWO.Recommend.Domain.Recommend;
-import com.togetherwithocean.TWO.Stat.RecommendRepository;
-import com.togetherwithocean.TWO.Visit.Repository.LocationRepository;
+import com.togetherwithocean.TWO.Recommend.Repository.RecommendRepository;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import com.togetherwithocean.TWO.Stat.DTO.GetMonthlyStatRes;
 import com.togetherwithocean.TWO.Stat.DTO.PatchStatWalkReq;
 import com.togetherwithocean.TWO.Stat.DTO.PostStatSaveReq;
+import com.togetherwithocean.TWO.Stat.DTO.StatRes;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
+import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
+import com.togetherwithocean.TWO.StatLoc.Repository.StatLocRepository;
+import com.togetherwithocean.TWO.Visit.Domain.Visit;
+import com.togetherwithocean.TWO.Visit.Repository.VisitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,12 +32,13 @@ public class StatService {
     private final StatRepository statRepository;
     private final RankingRepository rankingRepository;
     private final RecommendRepository recommendRepository;
+    private final VisitRepository visitRepository;
+    private final StatLocRepository statLocRepository;
 
-    public Stat savePlog(String email, PostStatSaveReq postStatSaveReq) {
+    public StatRes savePlog(String email, PostStatSaveReq postStatSaveReq) {
         Member member = memberRepository.findMemberByEmail(email);
         Stat stat = statRepository.findStatByMemberAndDate(member, postStatSaveReq.getDate());
-        Long rankingNumber = memberRepository.findRankingNumberByEmail(member.getEmail());
-        Ranking ranking = rankingRepository.findRankingByRankingNumber(rankingNumber);
+        Ranking ranking = member.getRanking();
 
         // member의 상태 갱신 -> MemberService
         // 신청 가능 쓰레기 봉투 수, 일 쓰레기봉투 수, 일 줍깅 수, 총 줍깅 수 갱신
@@ -46,26 +51,55 @@ public class StatService {
         member.setPoint(member.getPoint() + postStatSaveReq.getTrashBag() * 100);
         ranking.setScore(ranking.getScore() + postStatSaveReq.getTrashBag() * 10000);
 
+        // 멤버 방문 장소 정보 생성
+        Visit visit = Visit.builder()
+                .member(member)
+                .date(postStatSaveReq.getDate())
+                .name(postStatSaveReq.getLocation())
+                .recommend(false)
+                .build();
 
-        // 추천 지역이면 추가 포인트 및 스코어
+        // 추천 지역이면 추가 포인트 및 스코어 지급
+        // 추천 지역이면 visit true로 설정
         Recommend recommend = recommendRepository.findRecommendByName(postStatSaveReq.getLocation());
         if (recommend != null) {
             member.setPoint(member.getPoint() + postStatSaveReq.getTrashBag() * 500);
             ranking.setScore(ranking.getScore() + postStatSaveReq.getTrashBag() * 50000);
+            visit.setRecommend(true);
         }
 
-        rankingRepository.save(ranking);
-        memberRepository.save(member);
+        visitRepository.save(visit);
         statRepository.save(stat);
-        return stat;
+        memberRepository.save(member);
+        rankingRepository.save(ranking);
+
+        // 스탯-장소 정보 생성
+        StatLoc statLoc = StatLoc.builder()
+                .stat(stat)
+                .visit(visit)
+                .build();
+
+        statLocRepository.save(statLoc);
+
+        StatRes statRes = StatRes.builder()
+                .statNumber(stat.getStatNumber())
+                .date(stat.getDate())
+                .attend(stat.getAttend())
+                .step(stat.getStep())
+                .achieveStep(stat.getAchieveStep())
+                .plogging(stat.getPlogging())
+                .trashBag(stat.getTrashBag())
+                .visit(visitRepository.findVisitNamesByMemberAndDate(member, postStatSaveReq.getDate()))
+                .build();
+
+        return statRes;
     }
 
     // 걷깅이던 줍깅이던 관계 없이 걸음 수 및 포인트 갱신
-    public Stat saveStep(PatchStatWalkReq patchStatWalkReq, String email) {
+    public StatRes saveStep(PatchStatWalkReq patchStatWalkReq, String email) {
         Member member = memberRepository.findMemberByEmail(email);
         Stat stat = statRepository.findStatByMemberAndDate(member, patchStatWalkReq.getDate());
-        Long rankingNumber = memberRepository.findRankingNumberByEmail(member.getEmail());
-        Ranking ranking = rankingRepository.findRankingByRankingNumber(rankingNumber);
+        Ranking ranking = member.getRanking();
 
         // 사용자의 걸음 갱신
         stat.setStep(stat.getStep() + patchStatWalkReq.getStep());
@@ -81,7 +115,19 @@ public class StatService {
         rankingRepository.save(ranking);
         memberRepository.save(member);
         statRepository.save(stat);
-        return stat;
+
+        StatRes statRes = StatRes.builder()
+                .statNumber(stat.getStatNumber())
+                .date(stat.getDate())
+                .attend(stat.getAttend())
+                .step(stat.getStep())
+                .achieveStep(stat.getAchieveStep())
+                .plogging(stat.getPlogging())
+                .trashBag(stat.getTrashBag())
+                .visit(visitRepository.findVisitNamesByMemberAndDate(member, patchStatWalkReq.getDate()))
+                .build();
+
+        return statRes;
     }
 
     public Stat getPlogs(String email, LocalDate date) {
@@ -93,8 +139,7 @@ public class StatService {
 
     public GetMonthlyStatRes getMonthlyStat(int year, int month, String email) {
         Member member = memberRepository.findMemberByEmail(email);
-        Long rankingNumber = memberRepository.findRankingNumberByEmail(member.getEmail());
-        Ranking ranking = rankingRepository.findRankingByRankingNumber(rankingNumber);
+        Ranking ranking = member.getRanking();
 
         // Calendar DB에서 특정 유저의 특정 월에 속하는 데이터 리스트 가져옴
         Long monthlyPlogs =  statRepository.getMonthlyPlogging(member, year, month);

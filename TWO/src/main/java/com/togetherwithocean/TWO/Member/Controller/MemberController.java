@@ -103,11 +103,10 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Member> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
-        Member joinMember = memberService.save(userInfoReq);
+    public ResponseEntity<MemberRes> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
+        MemberRes joinMember = memberService.save(userInfoReq);
 
-        statService.makeNewStat(joinMember, LocalDate.now()); // 당일 stat 생성
-//        rankingService.makeNewRanking(joinMember); // 랭킹 정보 등록
+        statService.makeNewStat(memberRepository.findMemberByEmail(userInfoReq.getEmail()), LocalDate.now()); // 당일 stat 생성
         return ResponseEntity.status(HttpStatus.OK).body(joinMember);
     }
 
@@ -115,17 +114,34 @@ public class MemberController {
     public ResponseEntity<PostSignInRes> sign_in(@RequestBody PostSignInReq postSignInReq, HttpServletResponse response) {
 
         // 로그인 요청 보낸 멤버 정보
-        Member loginMember = memberRepository.findMemberByEmail(postSignInReq.getEmail());
+        Member member = memberRepository.findMemberByEmail(postSignInReq.getEmail());
 
         // 유효하지 않은 로그인 요청인 경우
-        if (loginMember == null || !loginMember.getPasswd().equals(postSignInReq.getPasswd()))
+        if (member == null || !member.getPasswd().equals(postSignInReq.getPasswd()))
             return ResponseEntity.status(HttpStatus.OK).body(null);
 
+        MemberRes memberRes = MemberRes.builder()
+                .realName(member.getRealName())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .passwd(member.getPasswd())
+                .phoneNumber(member.getPhoneNumber())
+                .postalCode(member.getPostalCode())
+                .address(member.getAddress())
+                .detailAddress(member.getDetailAddress())
+                .charId(member.getCharId())
+                .charName(member.getCharName())
+                .stepGoal(member.getStepGoal())
+                .availTrashBag(member.getAvailTrashBag())
+                .totalPlog(member.getTotalPlog())
+                .point(member.getPoint())
+                .build();
+
         // 토큰 생성 및 헤더에 토큰 정보 추가
-        TokenDto token = memberService.setTokenInHeader(loginMember, response);
+        TokenDto token = memberService.setTokenInHeader(member, response);
 
         // 로그인 성공시
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.setSignInInfo(loginMember, token));
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.setSignInInfo(memberRes, token));
     }
 
     @GetMapping("/main-info")

@@ -23,4 +23,10 @@ public class StatLoc {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visit_visit_number")
     private Visit visit;
+
+    @Builder
+    public StatLoc(Stat stat, Visit visit) {
+        this.stat = stat;
+        this.visit = visit;
+    }
 }

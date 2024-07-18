@@ -6,6 +6,7 @@ import com.togetherwithocean.TWO.StatLoc.Domain.StatLoc;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,9 @@ public class Visit {
     @Column(name = "recommend")
     private Boolean recommend;
 
+    @Column(name = "date")
+    private LocalDate date;
+
     @OneToMany(mappedBy = "visit")
     private List<StatLoc> statList = new ArrayList<>();
 
@@ -35,8 +39,9 @@ public class Visit {
     private Member member;
 
     @Builder
-    public Visit(String name, Boolean recommend, Member member) {
+    public Visit(String name, LocalDate date, Boolean recommend, Member member) {
         this.name = name;
+        this.date = date;
         this.recommend = recommend;
         this.member = member;
     }

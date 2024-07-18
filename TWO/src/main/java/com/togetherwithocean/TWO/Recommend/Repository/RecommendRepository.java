@@ -1,4 +1,4 @@
-package com.togetherwithocean.TWO.Stat;
+package com.togetherwithocean.TWO.Recommend.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.togetherwithocean.TWO.Recommend.Domain.Recommend;
