@@ -24,7 +24,7 @@ jobs:
           java-version: '21'
 
       - run:
-          cat ${{ secrets.MYSQL_APPLICATION }}
+          echo ${{ secrets.MYSQL_APPLICATION }}
           
       - name: make application-mysql.yml
         run: |
