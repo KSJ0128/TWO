@@ -22,7 +22,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      
+
+      - run:
+          pwd
+          
       - name: make application-mysql.yml
         run: |
           cd ./src/main/resources
