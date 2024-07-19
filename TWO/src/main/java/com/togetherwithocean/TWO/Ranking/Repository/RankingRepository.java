@@ -15,4 +15,6 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
     Ranking findRankingByRankingNumber(Long rankingNumber);
 
     List<Ranking> findTop10ByOrderByScoreDesc();
+
+    List<Ranking> findAllByOrderByScoreDesc();
 }
