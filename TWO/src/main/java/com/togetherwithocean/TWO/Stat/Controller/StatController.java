@@ -39,10 +39,10 @@ public class StatController {
 
     // 일자별 캘린더 조회
     @GetMapping("/daily")
-    ResponseEntity<Stat> getPlogList(@RequestParam LocalDate date, Authentication principal) {
+    ResponseEntity<StatRes> getPlogList(@RequestParam LocalDate date, Authentication principal) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        Stat dailyStat = statService.getPlogs(principal.getName(), date);
+        StatRes dailyStat = statService.getDailyPlog(principal.getName(), date);
         return ResponseEntity.status(HttpStatus.OK).body(dailyStat);
     }
 
