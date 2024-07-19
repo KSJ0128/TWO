@@ -130,11 +130,22 @@ public class StatService {
         return statRes;
     }
 
-    public Stat getPlogs(String email, LocalDate date) {
+    public StatRes getDailyPlog(String email, LocalDate date) {
         Member member = memberRepository.findMemberByEmail(email);
         Stat stat = statRepository.findStatByMemberAndDate(member, date);
 
-        return stat;
+        StatRes statRes = StatRes.builder()
+                .statNumber(stat.getStatNumber())
+                .date(stat.getDate())
+                .attend(stat.getAttend())
+                .step(stat.getStep())
+                .achieveStep(stat.getAchieveStep())
+                .plogging(stat.getPlogging())
+                .trashBag(stat.getTrashBag())
+                .visit(visitRepository.findVisitNamesByMemberAndDate(member, date))
+                .build();
+
+        return statRes;
     }
 
     public GetMonthlyStatRes getMonthlyStat(int year, int month, String email) {
