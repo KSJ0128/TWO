@@ -1,5 +1,7 @@
 package com.togetherwithocean.TWO.Member.Service;
 
+import com.togetherwithocean.TWO.Badge.Domain.Badge;
+import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
 import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
@@ -7,6 +9,8 @@ import com.togetherwithocean.TWO.Member.Authority;
 import com.togetherwithocean.TWO.Member.DTO.*;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
+import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
+import com.togetherwithocean.TWO.MemberBadge.Repository.MemberBadgeRepository;
 import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
@@ -27,6 +31,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final StatRepository statRepository;
     private final RankingRepository rankingRepository;
+    private final BadgeRepository badgeRepository;
+    private final MemberBadgeRepository memberBadgeRepository;
     private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -93,6 +99,15 @@ public class MemberService {
                 .totalPlog(member.getTotalPlog())
                 .point(member.getPoint())
                 .build();
+
+        // 바키타 돌고래 배지 지급
+        Badge badge = badgeRepository.findBadgeByBadgeNumber(1L);
+
+        MemberBadge memberBadge = MemberBadge.builder()
+                .member(member)
+                .badge(badge)
+                .build();
+        memberBadgeRepository.save(memberBadge);
 
         return memberRes;
     }

@@ -21,4 +21,10 @@ public class MemberBadge {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_number")
     private Badge badge;
+
+    @Builder
+    public MemberBadge(Member member, Badge badge) {
+        this.member = member;
+        this.badge = badge;
+    }
 }
