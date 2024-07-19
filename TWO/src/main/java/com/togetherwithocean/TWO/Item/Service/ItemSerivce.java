@@ -128,6 +128,17 @@ public class ItemSerivce {
         memberItem.setPosY(decoDTO.getPosY());
         memberItemRepository.save(memberItem);
 
+        // 상괭이 배지 지급
+        Member member = memberRepository.findMemberByEmail(email);
+        Badge badge = badgeRepository.findBadgeByBadgeNumber(3L);
+        if (memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
+            MemberBadge memberBadge = MemberBadge.builder()
+                    .member(member)
+                    .badge(badge)
+                    .build();
+            memberBadgeRepository.save(memberBadge);
+        }
+
         return getItemList(email);
     }
 }
