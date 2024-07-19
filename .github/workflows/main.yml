@@ -27,4 +27,4 @@ jobs:
         run: chmod +x ./TWO/gradlew
 
       - name: Build with Gradle
-        run: ./TWO/build/libs/gradlew clean build
+        run: ./TWO/gradlew clean build
