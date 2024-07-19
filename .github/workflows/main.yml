@@ -24,7 +24,9 @@ jobs:
           java-version: '21'
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./TWO/gradlew
+        run: chmod +x gradlew
+        working-directory: ./Back/TWO
 
       - name: Build with Gradle
-        run: ./TWO/gradlew clean build
+        run: ./gradlew clean build
+        working-directory: ./Back/TWO
