@@ -52,9 +52,6 @@ public class StatController {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         GetMonthlyStatRes monthlyStat = statService.getMonthlyStat(year, month, principal.getName());
-        if (monthlyStat == null)
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(monthlyStat);
+        return ResponseEntity.status(HttpStatus.OK).body(monthlyStat);
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -146,7 +147,23 @@ public class StatService {
         Long monthlyScore =  ranking.getScore();
         List<Stat> monthlyStats = statRepository.getMonthlyStat(member, year, month);
 
-        return new GetMonthlyStatRes(monthlyPlogs, monthlyScore * 10000, monthlyStats);
+        List<StatRes> monthlyStatRess= new ArrayList<>();
+
+        for (int i = 0; i < monthlyStats.size(); i++) {
+            StatRes statRes = StatRes.builder()
+                    .statNumber(monthlyStats.get(i).getStatNumber())
+                    .date(monthlyStats.get(i).getDate())
+                    .attend(monthlyStats.get(i).getAttend())
+                    .step(monthlyStats.get(i).getStep())
+                    .achieveStep(monthlyStats.get(i).getAchieveStep())
+                    .plogging(monthlyStats.get(i).getPlogging())
+                    .trashBag(monthlyStats.get(i).getTrashBag())
+                    .visit(visitRepository.findVisitNamesByMemberAndDate(member, monthlyStats.get(i).getDate()))
+                    .build();
+            monthlyStatRess.add(i, statRes);
+        }
+
+        return new GetMonthlyStatRes(monthlyPlogs, monthlyScore, monthlyStatRess);
     }
 
     public Stat makeNewStat(Member member, LocalDate date) {
