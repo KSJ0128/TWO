@@ -1,5 +1,7 @@
 package com.togetherwithocean.TWO.Item.Service;
 
+import com.togetherwithocean.TWO.Badge.Domain.Badge;
+import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
 import com.togetherwithocean.TWO.Item.DTO.BuyResDTO;
 import com.togetherwithocean.TWO.Item.DTO.DecoDTO;
 import com.togetherwithocean.TWO.Item.DTO.ItemDTO;
@@ -7,6 +9,8 @@ import com.togetherwithocean.TWO.Item.Domain.Item;
 import com.togetherwithocean.TWO.Item.Repository.ItemRepository;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
+import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
+import com.togetherwithocean.TWO.MemberBadge.Repository.MemberBadgeRepository;
 import com.togetherwithocean.TWO.MemberItem.DTO.MemberItemDTO;
 import com.togetherwithocean.TWO.MemberItem.Domain.MemberItem;
 import com.togetherwithocean.TWO.MemberItem.Repository.MemberItemRepository;
@@ -19,6 +23,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ItemSerivce {
+    private final MemberBadgeRepository memberBadgeRepository;
+    private final BadgeRepository badgeRepository;
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final MemberItemRepository memberItemRepository;
@@ -53,13 +59,26 @@ public class ItemSerivce {
                 .build();
             memberItemRepository.save(memberItem);
         }
-        return BuyResDTO.builder()
-                .beforeBuyPoint(beforePoint)
-                .afterBuyPoint(member.getPoint())
-                .buy(buy)
-                .itemName(item.getName())
-                .itemPrice(item.getPrice())
-                .build();
+
+        // 북대서양 긴수염고래 배지 지급
+        Badge badge = badgeRepository.findBadgeByBadgeNumber(2L);
+        if (memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
+            MemberBadge memberBadge = MemberBadge.builder()
+                    .member(member)
+                    .badge(badge)
+                    .build();
+            memberBadgeRepository.save(memberBadge);
+        }
+
+        BuyResDTO buyResDTO = BuyResDTO.builder()
+                        .beforeBuyPoint(beforePoint)
+                        .afterBuyPoint(member.getPoint())
+                        .buy(buy)
+                        .itemName(item.getName())
+                        .itemPrice(item.getPrice())
+                        .build();
+
+        return buyResDTO;
     }
 
     public List<MemberItemDTO> getItemList(String email) {
