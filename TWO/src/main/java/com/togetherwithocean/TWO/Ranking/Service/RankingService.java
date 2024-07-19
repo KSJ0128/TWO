@@ -24,7 +24,7 @@ public class RankingService {
         return rankingRepository.save(rank);
     }
 
-    public List<RankingDTO> getRanking() {
+    public List<RankingDTO> getTopRanking() {
         List<Ranking> topTen = rankingRepository.findTop10ByOrderByScoreDesc();
         List<RankingDTO> topTenRanking = new ArrayList<>();
 
@@ -33,5 +33,21 @@ public class RankingService {
             topTenRanking.add(i, new RankingDTO((long)i+1, nickname, topTen.get(i).getScore()));
         }
         return topTenRanking;
+    }
+
+    public RankingDTO getMyRanking(Member member) {
+       List<Ranking> allRanking = rankingRepository.findAllByOrderByScoreDesc();
+       Ranking myRanking = member.getRanking();
+       RankingDTO myRankingDTO = new RankingDTO();
+
+        for (int i = 0; i < allRanking.size(); i++) {
+            if (allRanking.get(i).equals(myRanking)) {
+                myRankingDTO.setRank((long)i+1);
+                myRankingDTO.setName(member.getNickname());
+                myRankingDTO.setScore(myRanking.getScore());
+                break;
+            }
+        }
+        return myRankingDTO;
     }
 }
