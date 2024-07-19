@@ -24,12 +24,12 @@ jobs:
           java-version: '21'
 
       - run:
-          ls
+          cat ${{ secrets.APPLICATION_MYSQL }}
           
       - name: make application-mysql.yml
         run: |
           cd ./TWO/src/main/resources
-          echo "${{ secrets.APPLICATION_MYSQL }}" > ./application.properties
+          echo "${{ secrets.APPLICATION_MYSQL }}" >> ./application.properties
       
       - run: cat ./TWO/src/main/resources/application.properties
          
