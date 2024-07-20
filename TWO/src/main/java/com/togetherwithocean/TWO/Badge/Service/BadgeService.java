@@ -50,5 +50,27 @@ public class BadgeService {
         }
     }
 
+    public void doPlogN(Member member, Long plogCnt) {
+        // 태평양몽크바다표범(1), 매부리 바다거북(3), 켐프각시바다거북(5), 만타가오리(10)
+        Long badgeNum = null;
+        if (plogCnt == 1)
+            badgeNum = 4L; // 태평양몽크바다표범
+        else if (plogCnt == 3)
+            badgeNum = 5L; // 매부리 바다거북
+        else if (plogCnt == 5)
+            badgeNum = 6L; // 켐프각시바다거북
+        else if (plogCnt == 10)
+            badgeNum = 7L; // 만타가오리
+        else
+            return;
+
+        Badge badge = badgeRepository.findBadgeByBadgeNumber(badgeNum);
+        MemberBadge memberBadge = MemberBadge.builder()
+                .member(member)
+                .badge(badge)
+                .build();
+        memberBadgeRepository.save(memberBadge);
+
+    }
 
 }
