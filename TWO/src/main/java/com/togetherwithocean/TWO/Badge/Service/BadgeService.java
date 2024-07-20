@@ -26,4 +26,18 @@ public class BadgeService {
         System.out.println(memberBadge.toString());
         memberBadgeRepository.save(memberBadge);
     }
+
+    public void buyFirstItem(Member member) {
+        // 북대서양 긴수염고래 배지 지급
+        Badge badge = badgeRepository.findBadgeByBadgeNumber(2L);
+        if (memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
+            MemberBadge memberBadge = MemberBadge.builder()
+                    .member(member)
+                    .badge(badge)
+                    .build();
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+
 }
