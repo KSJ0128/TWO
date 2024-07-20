@@ -1,14 +1,18 @@
 package com.togetherwithocean.TWO.Badge.Service;
 
+import com.togetherwithocean.TWO.Badge.DTO.BadgeRes;
 import com.togetherwithocean.TWO.Badge.Domain.Badge;
 import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
 import com.togetherwithocean.TWO.Member.Domain.Member;
+import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import com.togetherwithocean.TWO.MemberBadge.Repository.MemberBadgeRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,6 +20,26 @@ import java.util.Map;
 public class BadgeService {
     private final BadgeRepository badgeRepository;
     private final MemberBadgeRepository memberBadgeRepository;
+
+
+    public List<BadgeRes> findAllBagdes(Member member) {
+        List<MemberBadge> memberBadgeList = memberBadgeRepository.findMemberBadgesByMember(member);
+
+        List<BadgeRes> badgeResList = new ArrayList<>();
+        for (MemberBadge memberBadge : memberBadgeList){
+            Badge badge = memberBadge.getBadge();
+            BadgeRes badgeRes = BadgeRes.builder()
+                    .badgeNumber(badge.getBadgeNumber())
+                    .badgeName(badge.getBadgeName())
+                    .mission(badge.getMission())
+                    .build();
+            badgeResList.add(badgeRes);
+        }
+
+        return badgeResList;
+    }
+
+
     public void successJoin(Member member) {
         System.out.println("뱃지 지급");
         // 바키타 돌고래 배지 지급
