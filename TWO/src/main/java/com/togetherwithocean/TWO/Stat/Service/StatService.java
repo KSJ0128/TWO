@@ -1,5 +1,10 @@
 package com.togetherwithocean.TWO.Stat.Service;
 
+import com.togetherwithocean.TWO.Badge.Domain.Badge;
+import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
+import com.togetherwithocean.TWO.Badge.Service.BadgeService;
+import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
+import com.togetherwithocean.TWO.MemberBadge.Repository.MemberBadgeRepository;
 import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
 import com.togetherwithocean.TWO.Recommend.Domain.Recommend;
@@ -30,6 +35,8 @@ import java.util.List;
 public class StatService {
     @Autowired
     private final MemberRepository memberRepository;
+    private final MemberBadgeRepository memberBadgeRepository;
+    private final BadgeService badgeService;
     private final StatRepository statRepository;
     private final RankingRepository rankingRepository;
     private final RecommendRepository recommendRepository;
@@ -42,7 +49,7 @@ public class StatService {
         Ranking ranking = member.getRanking();
 
         // member의 상태 갱신 -> MemberService
-        // 신청 가능 쓰레기 봉투 수, 일 쓰레기봉투 수, 일 줍깅 수, 총 줍깅 수 갱신
+        // 신청 가능 쓰레기 봉투 수, 일 쓰레기봉투 수, 일 줍깅 수, 총 줍깅 수 갱신,
         member.setAvailTrashBag(member.getAvailTrashBag() + postStatSaveReq.getTrashBag());
         stat.setTrashBag(stat.getTrashBag() + postStatSaveReq.getTrashBag());
         stat.setPlogging(stat.getPlogging() + 1);
@@ -58,6 +65,8 @@ public class StatService {
                 .date(postStatSaveReq.getDate())
                 .name(postStatSaveReq.getLocation())
                 .recommend(false)
+                .latitude(postStatSaveReq.getLatitude())
+                .longtitude(postStatSaveReq.getLongtitude())
                 .build();
 
         // 추천 지역이면 추가 포인트 및 스코어 지급
@@ -73,6 +82,12 @@ public class StatService {
         statRepository.save(stat);
         memberRepository.save(member);
         rankingRepository.save(ranking);
+
+        // N회 줍깅 달성 여부 확인
+        badgeService.doPlogN(member, member.getTotalPlog());
+
+        // 점수 달성 여부 확인
+        badgeService.achieveScore(member, ranking.getScore());
 
         // 스탯-장소 정보 생성
         StatLoc statLoc = StatLoc.builder()
@@ -116,6 +131,9 @@ public class StatService {
         rankingRepository.save(ranking);
         memberRepository.save(member);
         statRepository.save(stat);
+
+        // 점수 달성 여부 확인
+        badgeService.achieveScore(member, ranking.getScore());
 
         StatRes statRes = StatRes.builder()
                 .statNumber(stat.getStatNumber())

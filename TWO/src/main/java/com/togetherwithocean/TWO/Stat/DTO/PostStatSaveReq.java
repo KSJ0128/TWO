@@ -13,4 +13,6 @@ public class PostStatSaveReq {
     LocalDate date;
     Long trashBag;
     String location;
+    Double latitude;
+    Double longtitude;
 }

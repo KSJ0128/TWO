@@ -45,10 +45,12 @@ public class Visit {
     private Member member;
 
     @Builder
-    public Visit(String name, LocalDate date, Boolean recommend, Member member) {
+    public Visit(String name, LocalDate date, Boolean recommend, Double latitude, Double longtitude, Member member) {
         this.name = name;
         this.date = date;
         this.recommend = recommend;
+        this.latitude = latitude;
+        this.longtitude = longtitude;
         this.member = member;
     }
 }
