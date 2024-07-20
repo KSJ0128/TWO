@@ -13,5 +13,5 @@ import java.util.List;
 public class GetMonthlyStatRes {
     Long monthlyPlog;
     Long monthlyScore;
-    List<Stat> monthlyCalendar;
+    List<StatRes> monthlyCalendar;
 }
