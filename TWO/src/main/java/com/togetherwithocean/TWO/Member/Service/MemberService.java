@@ -2,6 +2,7 @@ package com.togetherwithocean.TWO.Member.Service;
 
 import com.togetherwithocean.TWO.Badge.Domain.Badge;
 import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
+import com.togetherwithocean.TWO.Badge.Service.BadgeService;
 import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
@@ -31,8 +32,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final StatRepository statRepository;
     private final RankingRepository rankingRepository;
-    private final BadgeRepository badgeRepository;
-    private final MemberBadgeRepository memberBadgeRepository;
+    private final BadgeService badgeService;
     private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -83,6 +83,9 @@ public class MemberService {
         ranking.setMember(member);
         rankingRepository.save(ranking);
 
+        // 바키타 돌고래 배지 지급
+        badgeService.successJoin(member);
+
         MemberRes memberRes = MemberRes.builder()
                 .realName(member.getRealName())
                 .nickname(member.getNickname())
@@ -99,15 +102,6 @@ public class MemberService {
                 .totalPlog(member.getTotalPlog())
                 .point(member.getPoint())
                 .build();
-
-        // 바키타 돌고래 배지 지급
-        Badge badge = badgeRepository.findBadgeByBadgeNumber(1L);
-
-        MemberBadge memberBadge = MemberBadge.builder()
-                .member(member)
-                .badge(badge)
-                .build();
-        memberBadgeRepository.save(memberBadge);
 
         return memberRes;
     }
