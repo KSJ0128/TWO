@@ -2,6 +2,7 @@ package com.togetherwithocean.TWO.Stat.Service;
 
 import com.togetherwithocean.TWO.Badge.Domain.Badge;
 import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
+import com.togetherwithocean.TWO.Badge.Service.BadgeService;
 import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
 import com.togetherwithocean.TWO.MemberBadge.Repository.MemberBadgeRepository;
 import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
@@ -34,7 +35,7 @@ public class StatService {
     @Autowired
     private final MemberRepository memberRepository;
     private final MemberBadgeRepository memberBadgeRepository;
-    private final BadgeRepository badgeRepository;
+    private final BadgeService badgeService;
     private final StatRepository statRepository;
     private final RankingRepository rankingRepository;
     private final RecommendRepository recommendRepository;
@@ -81,68 +82,11 @@ public class StatService {
         memberRepository.save(member);
         rankingRepository.save(ranking);
 
-        // 태평양몽크바다표범(1), 매부리 바다거북(3), 켐프각시바다거북(5), 만타가오리(10)
-        if (member.getTotalPlog().equals(1L)) {
-            // 태평양몽크바다표범 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(4L);
+        // N회 줍깅 달성 여부 확인
+        badgeService.doPlogN(member, member.getTotalPlog());
 
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
-        else if (member.getTotalPlog().equals(3L)) {
-            // 매부리 바다거북 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(5L);
-
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
-        else if (member.getTotalPlog().equals(5L)) {
-            // 켐프각시바다거북 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(6L);
-
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
-        else if (member.getTotalPlog().equals(10L)) {
-            // 만타가오리 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(7L);
-
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
-
-        // 고래상어(100,000), 남방큰돌고래(500,000)
-        Badge badge = badgeRepository.findBadgeByBadgeNumber(8L);
-        if (ranking.getScore() >= 100000L && memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
-            // 고래상어 배지 지급
-            MemberBadge memberBadge = MemberBadge.builder()
-                        .member(member)
-                        .badge(badge)
-                        .build();
-                memberBadgeRepository.save(memberBadge);
-            }
-
-        badge = badgeRepository.findBadgeByBadgeNumber(9L);
-        if (ranking.getScore() >= 500000L && memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
-            // 남방큰돌고래 배지 지급
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
+        // 점수 달성 여부 확인
+        badgeService.achieveScore(member, ranking.getScore());
 
         // 스탯-장소 정보 생성
         StatLoc statLoc = StatLoc.builder()
@@ -187,27 +131,8 @@ public class StatService {
         memberRepository.save(member);
         statRepository.save(stat);
 
-        // 고래상어(100,000), 남방큰돌고래(500,000)
-        if (ranking.getScore() >= 100000L) {
-            // 고래상어 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(8L);
-
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
-        else if (ranking.getScore() >= 500000L) {
-            // 남방큰돌고래 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(9L);
-
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
+        // 점수 달성 여부 확인
+        badgeService.achieveScore(member, ranking.getScore());
 
         StatRes statRes = StatRes.builder()
                 .statNumber(stat.getStatNumber())

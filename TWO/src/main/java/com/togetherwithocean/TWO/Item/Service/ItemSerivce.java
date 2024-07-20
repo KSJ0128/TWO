@@ -2,6 +2,7 @@ package com.togetherwithocean.TWO.Item.Service;
 
 import com.togetherwithocean.TWO.Badge.Domain.Badge;
 import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
+import com.togetherwithocean.TWO.Badge.Service.BadgeService;
 import com.togetherwithocean.TWO.Item.DTO.BuyResDTO;
 import com.togetherwithocean.TWO.Item.DTO.DecoDTO;
 import com.togetherwithocean.TWO.Item.DTO.ItemDTO;
@@ -28,6 +29,7 @@ public class ItemSerivce {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final MemberItemRepository memberItemRepository;
+    private final BadgeService badgeService;
 
     public Item saveItem(ItemDTO itemDTO) {
         Item item = Item.builder()
@@ -60,15 +62,7 @@ public class ItemSerivce {
             memberItemRepository.save(memberItem);
         }
 
-        // 북대서양 긴수염고래 배지 지급
-        Badge badge = badgeRepository.findBadgeByBadgeNumber(2L);
-        if (memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
+        badgeService.buyFirstItem(member);
 
         BuyResDTO buyResDTO = BuyResDTO.builder()
                         .beforeBuyPoint(beforePoint)
@@ -130,14 +124,7 @@ public class ItemSerivce {
 
         // 상괭이 배지 지급
         Member member = memberRepository.findMemberByEmail(email);
-        Badge badge = badgeRepository.findBadgeByBadgeNumber(3L);
-        if (memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
+        badgeService.buyFirstDeco(member);
 
         return getItemList(email);
     }
