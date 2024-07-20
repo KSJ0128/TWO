@@ -16,6 +16,7 @@ import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
+import com.togetherwithocean.TWO.Stat.Service.StatService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class MemberService {
     private final BadgeService badgeService;
     private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
+    private final StatService statService;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
 

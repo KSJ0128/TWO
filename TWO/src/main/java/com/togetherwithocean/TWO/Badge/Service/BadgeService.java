@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class BadgeService {
@@ -70,7 +72,27 @@ public class BadgeService {
                 .badge(badge)
                 .build();
         memberBadgeRepository.save(memberBadge);
-
     }
 
+    public void achieveScore(Member member, Long userScore) {
+        // key : 점수, value : 배지번호
+        Map<Long, Long> scoreBadgeNum = Map.of(
+                100000L, 8L,  // 고래상어(100,000)
+                500000L, 9L       // 남방큰돌고래(500,000)
+        );
+
+        for (Long score : scoreBadgeNum.keySet()) {
+            if (userScore >= score) { // 해당 점수보다 높으면 뱃지 조회
+                Long badgeNum = scoreBadgeNum.get(score);
+                Badge badge = badgeRepository.findBadgeByBadgeNumber(badgeNum);
+                if (memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) { // 가지고 있지 않은 뱃지
+                    MemberBadge memberBadge = MemberBadge.builder()
+                            .member(member)
+                            .badge(badge)
+                            .build();
+                    memberBadgeRepository.save(memberBadge);
+                }
+            }
+        }
+    }
 }

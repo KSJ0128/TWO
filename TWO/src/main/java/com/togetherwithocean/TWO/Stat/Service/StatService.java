@@ -82,30 +82,11 @@ public class StatService {
         memberRepository.save(member);
         rankingRepository.save(ranking);
 
-        // 태평양몽크바다표범(1), 매부리 바다거북(3), 켐프각시바다거북(5), 만타가오리(10)
+        // N회 줍깅 달성 여부 확인
         badgeService.doPlogN(member, member.getTotalPlog());
 
-
-        // 고래상어(100,000), 남방큰돌고래(500,000)
-        Badge badge = badgeRepository.findBadgeByBadgeNumber(8L);
-        if (ranking.getScore() >= 100000L && memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
-            // 고래상어 배지 지급
-            MemberBadge memberBadge = MemberBadge.builder()
-                        .member(member)
-                        .badge(badge)
-                        .build();
-                memberBadgeRepository.save(memberBadge);
-            }
-
-        badge = badgeRepository.findBadgeByBadgeNumber(9L);
-        if (ranking.getScore() >= 500000L && memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
-            // 남방큰돌고래 배지 지급
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
+        // 점수 달성 여부 확인
+        badgeService.achieveScore(member, ranking.getScore());
 
         // 스탯-장소 정보 생성
         StatLoc statLoc = StatLoc.builder()
@@ -150,27 +131,8 @@ public class StatService {
         memberRepository.save(member);
         statRepository.save(stat);
 
-        // 고래상어(100,000), 남방큰돌고래(500,000)
-        if (ranking.getScore() >= 100000L) {
-            // 고래상어 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(8L);
-
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
-        else if (ranking.getScore() >= 500000L) {
-            // 남방큰돌고래 배지 지급
-            Badge badge = badgeRepository.findBadgeByBadgeNumber(9L);
-
-            MemberBadge memberBadge = MemberBadge.builder()
-                    .member(member)
-                    .badge(badge)
-                    .build();
-            memberBadgeRepository.save(memberBadge);
-        }
+        // 점수 달성 여부 확인
+        badgeService.achieveScore(member, ranking.getScore());
 
         StatRes statRes = StatRes.builder()
                 .statNumber(stat.getStatNumber())
