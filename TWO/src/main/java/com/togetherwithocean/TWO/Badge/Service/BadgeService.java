@@ -39,5 +39,16 @@ public class BadgeService {
         }
     }
 
+    public void buyFirstDeco(Member member) {
+        Badge badge = badgeRepository.findBadgeByBadgeNumber(3L);
+        if (memberBadgeRepository.findMemberBadgeByMemberAndBadge(member, badge) == null) {
+            MemberBadge memberBadge = MemberBadge.builder()
+                    .member(member)
+                    .badge(badge)
+                    .build();
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
 
 }
