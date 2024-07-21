@@ -1,7 +1,6 @@
 package com.togetherwithocean.TWO.Member.Service;
 
 import com.togetherwithocean.TWO.Badge.Domain.Badge;
-import com.togetherwithocean.TWO.Badge.Repository.BadgeRepository;
 import com.togetherwithocean.TWO.Badge.Service.BadgeService;
 import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
