@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
                 httpResponse.setHeader("AccessToken", newAccessToken);
                 httpResponse.setHeader("RefreshToken", newRefreshToken);
-                SecurityContextHolder.getContext().setAuthentication(jwtProvider.getAuthentication(accessToken));
+                SecurityContextHolder.getContext().setAuthentication(jwtProvider.getAuthentication(newAccessToken));
                 System.out.println("액세스 토큰 재발급");
                 System.out.println(newAccessToken);
                 System.out.println(newRefreshToken);
