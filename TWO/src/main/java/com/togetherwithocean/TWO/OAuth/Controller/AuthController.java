@@ -2,6 +2,7 @@ package com.togetherwithocean.TWO.OAuth.Controller;
 
 
 import com.togetherwithocean.TWO.Jwt.TokenDto;
+import com.togetherwithocean.TWO.Member.DTO.MemberRes;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import com.togetherwithocean.TWO.Member.Service.MemberService;
@@ -37,7 +38,7 @@ public class AuthController {
     }
 
     @GetMapping("/kakao/callback")
-    public @ResponseBody ResponseEntity<Member> kakaoCallback(@RequestParam String code, HttpServletResponse response) {
+    public @ResponseBody ResponseEntity<MemberRes> kakaoCallback(@RequestParam String code, HttpServletResponse response) {
         System.out.println("kakao callback");
         String accessToken = kakaoService.getAccessToken(code);
         KakaoUserInfo kakaoUserInfo = kakaoService.getUserInfoByAccessToken(accessToken);
@@ -54,7 +55,24 @@ public class AuthController {
         // 토큰 생성 및 헤더에 토큰 정보 추가
         TokenDto token = memberService.setTokenInHeader(loginMember, response);
 
+        MemberRes memberRes = MemberRes.builder()
+                .realName(loginMember.getRealName())
+                .nickname(loginMember.getNickname())
+                .email(loginMember.getEmail())
+                .passwd(loginMember.getPasswd())
+                .phoneNumber(loginMember.getPhoneNumber())
+                .postalCode(loginMember.getPostalCode())
+                .address(loginMember.getAddress())
+                .detailAddress(loginMember.getDetailAddress())
+                .charId(loginMember.getCharId())
+                .charName(loginMember.getCharName())
+                .stepGoal(loginMember.getStepGoal())
+                .availTrashBag(loginMember.getAvailTrashBag())
+                .totalPlog(loginMember.getTotalPlog())
+                .point(loginMember.getPoint())
+                .build();
+
         // 로그인 성공시 사용자 반환
-        return ResponseEntity.status(HttpStatus.OK).body(loginMember);
+        return ResponseEntity.status(HttpStatus.OK).body(memberRes);
     }
 }
