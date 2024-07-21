@@ -45,7 +45,7 @@ public class Stat {
     @JsonBackReference
     private Member member;
 
-    @OneToMany(mappedBy = "stat")
+    @OneToMany(mappedBy = "stat", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<StatLoc> locationsList = new ArrayList<>();
 

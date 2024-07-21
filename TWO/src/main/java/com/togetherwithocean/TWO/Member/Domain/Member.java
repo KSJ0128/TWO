@@ -71,15 +71,15 @@ public class Member {
     @Column(name = "authority")
     private Authority authority;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<MemberBadge> badgesList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<MemberItem> itemsList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Stat> statList = new ArrayList<>();
 
@@ -90,7 +90,7 @@ public class Member {
     @JoinColumn(name = "ranking_ranking_number", unique = true)
     private Ranking ranking;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Visit> visitList = new ArrayList<>();
 
