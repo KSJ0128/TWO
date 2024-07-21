@@ -37,3 +37,40 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
         working-directory: TWO
+      
+      # github artifact에 jar파일 복사
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: build/libs/*.jar
+
+      - name: Copy jar file to remote
+        uses: appleboy/scp-action@master
+        with:
+          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "./TWO/build/libs/*.jar"
+          target: "/home/ec2-user/cicd"
+          strip_components: 2
+
+      - name: Copy deploy script file to remote
+        uses: appleboy/scp-action@master
+        with:
+          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "deploy.sh"
+          target: "/home/ec2-user/cicd"
+
+      - name: Execute deploy script
+        uses: appleboy/ssh-action@master
+        with:
+          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
+          script: |
+            chmod +x /home/ec2-user/cicd/deploy.sh
+            sh /home/ec2-user/cicd/deploy.sh
