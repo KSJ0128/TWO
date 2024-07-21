@@ -1,6 +1,8 @@
 package com.togetherwithocean.TWO.Jwt;
 
 import com.togetherwithocean.TWO.Member.Domain.Member;
+import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -16,7 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+
 import java.security.Key;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -29,34 +33,28 @@ import java.util.stream.Collectors;
 public class JwtProvider {
 
     private static final String BEARER_TYPE = "Bearer";
+    private final String PREFIX_REFRESH = "REFRESH:";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
+    private final StringRedisTemplate redisTemplate;
+    private final MemberRepository memberRepository;
     private final Key key;
 
-    public JwtProvider(@Value("${jwt.secret}") String secretKey) {
+    public JwtProvider(@Value("${jwt.secret}") String secretKey, StringRedisTemplate redisTemplate,
+                       MemberRepository memberRepository) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.redisTemplate = redisTemplate;
+        this.memberRepository = memberRepository;
     }
 
     public TokenDto generateToken(Member loginMember) {
 
-        long now = (new Date()).getTime();
-
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-
-        String accessToken = Jwts.builder()
-                .setSubject(loginMember.getEmail()) // payload "sub": "name"
-                .claim("auth", loginMember.getAuthority())
-                .setExpiration(accessTokenExpiresIn) // payload "exp": 151621022 (ex)
-                .signWith(key, SignatureAlgorithm.HS256) // header "alg": "HS256"
-                .compact();
+        String accessToken = createAccessToken(loginMember.getEmail());
 
         // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        String refreshToken = createRefreshToken(loginMember.getEmail());
 
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)
@@ -66,11 +64,48 @@ public class JwtProvider {
                 .build();
     }
 
-    // Request Header에서 토큰 정보 추출
-    public String resolveToken(HttpServletRequest request) {
+    public String createAccessToken(String email) {
+        long now = (new Date()).getTime();
+        Member member = memberRepository.findMemberByEmail(email);
+
+        return Jwts.builder()
+                .setSubject(member.getEmail()) // payload "sub": "name"
+                .claim("auth", member.getAuthority())
+                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME)) // payload "exp": 151621022 (ex)
+                .signWith(key, SignatureAlgorithm.HS256) // header "alg": "HS256"
+                .compact();
+    }
+
+    public String createRefreshToken(String email) {
+        long now = (new Date()).getTime();
+        Member loginMember = memberRepository.findMemberByEmail(email);
+
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // redis에 Refresh Token 저장
+        redisTemplate.opsForValue()
+                .set(PREFIX_REFRESH + loginMember.getEmail(), refreshToken, Duration.ofSeconds(REFRESH_TOKEN_EXPIRE_TIME));
+
+        return refreshToken;
+    }
+
+    // Request Header에서 액세스 토큰 정보 추출
+    public String resolveAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    // Request Header에서 리프레쉬 토큰 정보 추출
+    public String resolveRefreshToken(HttpServletRequest request) {
+        String refreshToken = request.getHeader("RefreshToken");
+        if (StringUtils.hasText(refreshToken)) {
+            return refreshToken;
         }
         return null;
     }
@@ -94,7 +129,7 @@ public class JwtProvider {
     }
 
     // 토큰 정보를 검증하는 메서드
-    public boolean validateToken(String token) {
+    public boolean validateAccessToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -113,8 +148,20 @@ public class JwtProvider {
         return false;
     }
 
+    // refreshToken 토큰 검증
+    // db에 저장되어 있는 token과 비교
+    // db에 저장한다는 것이 jwt token을 사용한다는 강점을 상쇄시킨다.
+    // db 보다는 redis를 사용하는 것이 더욱 좋다. (in-memory db기 때문에 조회속도가 빠르고 주기적으로 삭제하는 기능이 기본적으로 존재합니다.)
+    public boolean refreshTokenValidation(String token, String email) {
+        String searchRefresh = redisTemplate.opsForValue().get(PREFIX_REFRESH + email);
+
+        // DB에 저장한 토큰 비교
+        return token.equals(searchRefresh);
+    }
+
+
     // accessToken
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
