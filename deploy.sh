@@ -22,5 +22,5 @@ echo "JAR Path: $JAR_PATH"
 chmod +x $JAR_PATH
 
 # JAR 파일을 백그라운드에서 실행합니다.
-nohup java -jar $JAR_PATH &
+nohup java -jar $JAR_PATH > /dev/null 2> /dev/null < /dev/null &
 echo "Deployment successful."
