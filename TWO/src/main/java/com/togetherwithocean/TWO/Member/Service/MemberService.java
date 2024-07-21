@@ -231,4 +231,8 @@ public class MemberService {
 
         return memberRes;
     }
+
+    public void deleteMember(Member member) {
+        memberRepository.deleteById(member.getMemberNumber());
+    }
 }

@@ -175,6 +175,21 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(memberRes);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteMember(Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        Member member = memberRepository.findMemberByEmail(principal.getName());
+        String nickname = member.getNickname();
+        memberService.deleteMember(member);
+
+        if (member != null)
+            return ResponseEntity.status(HttpStatus.OK).body(nickname + "님의 회원 탈퇴가 완료되었습니다.");
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(nickname + "님의 회원 탈퇴에 실패했습니다.");
+
+    }
 //    @GetMapping("/test")
 //    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
 }
