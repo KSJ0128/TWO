@@ -35,7 +35,6 @@ public class MemberService {
     private final BadgeService badgeService;
     private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
-    private final StatService statService;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
 
@@ -233,5 +232,14 @@ public class MemberService {
 
     public void deleteMember(Member member) {
         memberRepository.deleteById(member.getMemberNumber());
+    }
+
+    public void checkAttend(String email) {
+        Member member = memberRepository.findMemberByEmail(email);
+        Stat todayStat = statRepository.findStatByMemberAndDate(member, LocalDate.now());
+        if (!todayStat.getAttend()) {
+            todayStat.setAttend(true);
+        }
+        statRepository.save(todayStat);
     }
 }
