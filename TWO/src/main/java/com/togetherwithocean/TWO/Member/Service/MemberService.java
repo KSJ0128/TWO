@@ -1,6 +1,7 @@
 package com.togetherwithocean.TWO.Member.Service;
 
 import com.togetherwithocean.TWO.Badge.Domain.Badge;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import com.togetherwithocean.TWO.Badge.Service.BadgeService;
 import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
@@ -16,6 +17,7 @@ import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
 import com.togetherwithocean.TWO.Stat.Service.StatService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +39,10 @@ public class MemberService {
     private final BadgeService badgeService;
     private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
-    private final StatService statService;
+    private final StringRedisTemplate redisTemplate;
+    private final String PREFIX_LOGOUT = "LOGOUT:";
+    private final String PREFIX_LOGOUT_REFRESH = "LOGOUT_REFRESH:";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
 
@@ -130,6 +137,18 @@ public class MemberService {
 
     public PostSignInRes setSignInInfo(MemberRes memberRes, TokenDto token) {
         return new PostSignInRes(memberRes, token);
+    }
+
+    public void logoutMember(HttpServletRequest request, String email) {
+        String accessToken = jwtProvider.resolveAccessToken(request);
+        String refreshToken = jwtProvider.resolveRefreshToken(request);
+        Date accessExpiration = jwtProvider.parseClaims(accessToken).getExpiration();
+        Date refreshExpiration = jwtProvider.parseClaims(refreshToken).getExpiration();
+
+        redisTemplate.opsForValue()
+                .set(PREFIX_LOGOUT + email, accessToken, Duration.ofSeconds(accessExpiration.getTime() - new Date().getTime()));
+        redisTemplate.opsForValue()
+                .set(PREFIX_LOGOUT_REFRESH + email, refreshToken, Duration.ofSeconds(refreshExpiration.getTime() - new Date().getTime()));
     }
 
     public MainInfoRes getMainInfo(String email) {

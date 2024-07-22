@@ -5,6 +5,7 @@ import com.togetherwithocean.TWO.Member.DTO.*;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
 import com.togetherwithocean.TWO.Ranking.Service.RankingService;
 import com.togetherwithocean.TWO.Stat.Service.StatService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
 import com.togetherwithocean.TWO.Member.Domain.Member;
@@ -134,6 +135,14 @@ public class MemberController {
 
         // 로그인 성공시
         return ResponseEntity.status(HttpStatus.OK).body(memberService.setSignInInfo(memberRes, token));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logoutMember(Authentication principal, HttpServletRequest request) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        memberService.logoutMember(request, principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).body("로그아웃 처리되었습니다.");
     }
 
     @GetMapping("/main-info")
