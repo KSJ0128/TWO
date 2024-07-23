@@ -50,9 +50,18 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     return;
                 }
             }
-            catch (Exception e) {
-                ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
-                return;
+            else if (refreshToken != null && jwtProvider.refreshTokenValidation(refreshToken, jwtProvider.parseClaims(accessToken).getSubject())) {
+                System.out.println("액세스 토큰 만료");
+                String email = jwtProvider.parseClaims(accessToken).getSubject();
+                String newAccessToken = jwtProvider.createAccessToken(email);
+                String newRefreshToken = jwtProvider.createRefreshToken(email);
+                HttpServletResponse httpResponse = (HttpServletResponse) response;
+                httpResponse.setHeader("AccessToken", newAccessToken);
+                httpResponse.setHeader("RefreshToken", newRefreshToken);
+                SecurityContextHolder.getContext().setAuthentication(jwtProvider.getAuthentication(newAccessToken));
+                System.out.println("액세스 토큰 재발급");
+                System.out.println(newAccessToken);
+                System.out.println(newRefreshToken);
             }
 
             chain.doFilter(request, response); // 다음 필터로 넘어가거나, 요청 처리 진행

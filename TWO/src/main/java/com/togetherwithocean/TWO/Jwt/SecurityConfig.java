@@ -36,8 +36,7 @@ public class SecurityConfig {
                         "member/find-email", "member/find-pw",
                         "certify/send-sms", "certify/send-email",
                         "certify/confirm-sms", "certify/confirm-sms",
-                        "/oauth/kakao/login", "/oauth/kakao/callback",
-                        "/item/*"
+                        "/oauth/kakao/login", "/oauth/kakao/callback"
                 ).permitAll()
                 .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
