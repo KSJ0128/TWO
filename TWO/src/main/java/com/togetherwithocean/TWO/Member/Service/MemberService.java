@@ -71,7 +71,6 @@ public class MemberService {
 
         Ranking ranking = Ranking.builder().build();
 
-        System.out.println("비밀번호 일치?");
         Member member = Member.builder()
                 .realName(memberSave.getRealName())
                 .nickname(memberSave.getNickname())
