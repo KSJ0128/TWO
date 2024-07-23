@@ -151,6 +151,7 @@ public class MemberController {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         MainInfoRes mainInfo = memberService.getMainInfo(principal.getName());
+        memberService.checkAttend(principal.getName());
         return ResponseEntity.status(HttpStatus.OK).body(mainInfo);
     }
 
