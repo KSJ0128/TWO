@@ -110,7 +110,7 @@ public class MemberController {
         Member member = memberRepository.findMemberByEmail(postSignInReq.getEmail());
 
         // 유효하지 않은 로그인 요청인 경우
-        if (member == null || !member.getPasswd().equals(postSignInReq.getPasswd()))
+        if (member == null || memberService.equalEncodePassword(member.getPasswd(), postSignInReq.getPasswd()))
             return ResponseEntity.status(HttpStatus.OK).body(null);
 
         MemberRes memberRes = MemberRes.builder()
