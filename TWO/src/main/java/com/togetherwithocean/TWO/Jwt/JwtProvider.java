@@ -34,6 +34,8 @@ public class JwtProvider {
 
     private static final String BEARER_TYPE = "Bearer";
     private final String PREFIX_REFRESH = "REFRESH:";
+    private final String PREFIX_LOGOUT = "LOGOUT:";
+    private final String PREFIX_LOGOUT_REFRESH = "LOGOUT_REFRESH:";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
     private final StringRedisTemplate redisTemplate;
@@ -131,6 +133,17 @@ public class JwtProvider {
     // 토큰 정보를 검증하는 메서드
     public boolean validateAccessToken(String token) {
         try {
+            String email = parseClaims(token).getSubject();
+            String logoutToken = redisTemplate.opsForValue().get(PREFIX_LOGOUT + email);
+
+            System.out.println("제공된 토큰: " + token);
+            System.out.println("로그아웃된 토큰: " + logoutToken);
+
+            if (token.equals(logoutToken)) {
+                System.out.println("로그아웃 처리된 액세스 토큰입니다.");
+                return false;
+            }
+
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
@@ -140,6 +153,7 @@ public class JwtProvider {
             log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
@@ -153,12 +167,20 @@ public class JwtProvider {
     // db에 저장한다는 것이 jwt token을 사용한다는 강점을 상쇄시킨다.
     // db 보다는 redis를 사용하는 것이 더욱 좋다. (in-memory db기 때문에 조회속도가 빠르고 주기적으로 삭제하는 기능이 기본적으로 존재합니다.)
     public boolean refreshTokenValidation(String token, String email) {
-        String searchRefresh = redisTemplate.opsForValue().get(PREFIX_REFRESH + email);
+        String logoutRefresh = redisTemplate.opsForValue().get(PREFIX_LOGOUT_REFRESH + email);
 
+        System.out.println("제공된 토큰: " + token);
+        System.out.println("로그아웃된 토큰: " + logoutRefresh);
+
+        if (token.equals(logoutRefresh)) {
+            System.out.println("로그아웃 처리된 리프레쉬 토큰입니다.");
+            return false;
+        }
+
+        String searchRefresh = redisTemplate.opsForValue().get(PREFIX_REFRESH + email);
         // DB에 저장한 토큰 비교
         return token.equals(searchRefresh);
     }
-
 
     // accessToken
     public Claims parseClaims(String accessToken) {
@@ -171,5 +193,10 @@ public class JwtProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public boolean confirmLogout(String accessToken, String email) {
+        String logoutToken = redisTemplate.opsForValue().get(PREFIX_LOGOUT + email);
+        return accessToken.equals(logoutToken);
     }
 }
