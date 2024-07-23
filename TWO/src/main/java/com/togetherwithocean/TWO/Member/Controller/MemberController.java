@@ -200,6 +200,14 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.OK).body(nickname + "님의 회원 탈퇴에 실패했습니다.");
 
     }
+
+    @GetMapping("/mypage-info")
+    public ResponseEntity<MyPageRes> viewMypage(Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        MyPageRes myPageInfo = memberService.getMyPageInfo(principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(myPageInfo);
+    }
 //    @GetMapping("/test")
 //    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
 }
