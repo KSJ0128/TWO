@@ -1,28 +1,23 @@
 package com.togetherwithocean.TWO.Member.Service;
 
-import com.togetherwithocean.TWO.Badge.Domain.Badge;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import com.togetherwithocean.TWO.Badge.Service.BadgeService;
 import com.togetherwithocean.TWO.Item.Service.ItemSerivce;
 import com.togetherwithocean.TWO.Jwt.JwtProvider;
 import com.togetherwithocean.TWO.Jwt.TokenDto;
-import com.togetherwithocean.TWO.Member.Authority;
 import com.togetherwithocean.TWO.Member.DTO.*;
 import com.togetherwithocean.TWO.Member.Domain.Member;
 import com.togetherwithocean.TWO.Member.Repository.MemberRepository;
-import com.togetherwithocean.TWO.MemberBadge.Domain.MemberBadge;
-import com.togetherwithocean.TWO.MemberBadge.Repository.MemberBadgeRepository;
 import com.togetherwithocean.TWO.Ranking.Domain.Ranking;
 import com.togetherwithocean.TWO.Ranking.Repository.RankingRepository;
 import com.togetherwithocean.TWO.Stat.Domain.Stat;
 import com.togetherwithocean.TWO.Stat.Repository.StatRepository;
-import com.togetherwithocean.TWO.Stat.Service.StatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +35,8 @@ public class MemberService {
     private final ItemSerivce itemSerivce;
     private final JwtProvider jwtProvider;
     private final StringRedisTemplate redisTemplate;
+    private final PasswordEncoder passwordEncoder;
+
     private final String PREFIX_LOGOUT = "LOGOUT:";
     private final String PREFIX_LOGOUT_REFRESH = "LOGOUT_REFRESH:";
 
@@ -60,6 +57,10 @@ public class MemberService {
         return memberRepository.existsByEmail(email);
     }
 
+    public boolean equalEncodePassword(String encodePassword, String password) {
+        return encodePassword.equals(passwordEncoder.encode(password));
+    }
+
     @Transactional
     public MemberRes save(MemberJoinReq memberSave) {
         System.out.println(memberSave.getPasswd() + " "+ memberSave.getCheckPasswd());
@@ -70,12 +71,11 @@ public class MemberService {
 
         Ranking ranking = Ranking.builder().build();
 
-        System.out.println("비밀번호 일치?");
         Member member = Member.builder()
                 .realName(memberSave.getRealName())
                 .nickname(memberSave.getNickname())
                 .email(memberSave.getEmail())
-                .passwd(memberSave.getPasswd())
+                .passwd(passwordEncoder.encode(memberSave.getPasswd()))
                 .phoneNumber(memberSave.getPhoneNumber())
                 .postalCode(memberSave.getPostalCode())
                 .address(memberSave.getAddress())
