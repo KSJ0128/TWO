@@ -254,6 +254,16 @@ public class MemberService {
         memberRepository.deleteById(member.getMemberNumber());
     }
 
+    public MyPageRes getMyPageInfo(String email) {
+        Member member = memberRepository.findMemberByEmail(email);
+
+        MyPageRes myPageRes = MyPageRes.builder()
+                .nickname(member.getNickname())
+                .point(member.getPoint())
+                .score(member.getRanking().getScore())
+                .build();
+        return myPageRes;
+      
     public void checkAttend(String email) {
         Member member = memberRepository.findMemberByEmail(email);
         Stat todayStat = statRepository.findStatByMemberAndDate(member, LocalDate.now());
