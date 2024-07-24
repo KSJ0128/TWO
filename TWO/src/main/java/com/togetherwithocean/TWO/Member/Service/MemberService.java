@@ -263,6 +263,7 @@ public class MemberService {
                 .score(member.getRanking().getScore())
                 .build();
         return myPageRes;
+    }
       
     public void checkAttend(String email) {
         Member member = memberRepository.findMemberByEmail(email);
