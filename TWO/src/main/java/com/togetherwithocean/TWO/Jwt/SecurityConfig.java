@@ -35,7 +35,7 @@ public class SecurityConfig {
                         "/member/check-email", "/member/check-nick",
                         "member/find-email", "member/find-pw",
                         "certify/send-sms", "certify/send-email",
-                        "certify/confirm-sms", "certify/confirm-sms",
+                        "certify/confirm-sms", "certify/confirm-email",
                         "/oauth/kakao/login", "/oauth/kakao/callback"
                 ).permitAll()
                 .anyRequest().authenticated())
