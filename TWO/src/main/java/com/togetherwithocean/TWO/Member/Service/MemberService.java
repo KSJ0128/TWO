@@ -226,7 +226,7 @@ public class MemberService {
 
     public MemberRes changeMypage(Member member, PatchChangeMypage patchChangeMypage) {
         member.setNickname(patchChangeMypage.getNickname());
-        member.setPasswd(patchChangeMypage.getPasswd());
+        member.setPasswd(passwordEncoder.encode(patchChangeMypage.getPasswd()));
         member.setPhoneNumber(patchChangeMypage.getPhoneNumber());
         memberRepository.save(member);
 

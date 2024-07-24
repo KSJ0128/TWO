@@ -68,7 +68,7 @@ public class MemberController {
 
         // 비밀번호 일치 확인
         if (postFindMemberPasswdReq.getPasswd().equals(postFindMemberPasswdReq.getRe_passwd())) {
-            findMember.setPasswd(postFindMemberPasswdReq.getPasswd());
+            findMember.setPasswd(passwordEncoder.encode(postFindMemberPasswdReq.getPasswd()));
             memberService.updatePasswd(findMember);
             return ResponseEntity.status(HttpStatus.OK).body("비밀번호 설정이 완료되었습니다.");
         }
