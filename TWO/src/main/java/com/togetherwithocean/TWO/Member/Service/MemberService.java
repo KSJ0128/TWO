@@ -263,5 +263,13 @@ public class MemberService {
                 .score(member.getRanking().getScore())
                 .build();
         return myPageRes;
+      
+    public void checkAttend(String email) {
+        Member member = memberRepository.findMemberByEmail(email);
+        Stat todayStat = statRepository.findStatByMemberAndDate(member, LocalDate.now());
+        if (!todayStat.getAttend()) {
+            todayStat.setAttend(true);
+        }
+        statRepository.save(todayStat);
     }
 }
