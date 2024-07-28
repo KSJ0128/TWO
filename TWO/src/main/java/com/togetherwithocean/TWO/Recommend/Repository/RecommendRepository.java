@@ -14,6 +14,6 @@ public interface RecommendRepository extends JpaRepository<Recommend, Long> {
 
 
     @Query("UPDATE Recommend r SET r.recs = false WHERE r.direction = :direction")
-    void updateRecsByDirection(@Param("direction") String direction);
+    void updateRecsFalseByDirection(@Param("direction") String direction);
 
 }
