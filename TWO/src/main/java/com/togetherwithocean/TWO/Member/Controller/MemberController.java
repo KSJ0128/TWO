@@ -98,6 +98,10 @@ public class MemberController {
 
     @PostMapping("/join")
     public ResponseEntity<MemberRes> saveBasicInfo(@RequestBody MemberJoinReq userInfoReq) {
+
+        if (memberRepository.existsByEmail(userInfoReq.getEmail()) || memberRepository.existsByNickname(userInfoReq.getNickname()))
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+
         MemberRes joinMember = memberService.save(userInfoReq);
 
         statService.makeNewStat(memberRepository.findMemberByEmail(userInfoReq.getEmail()), LocalDate.now()); // 당일 stat 생성
@@ -111,8 +115,10 @@ public class MemberController {
         Member member = memberRepository.findMemberByEmail(postSignInReq.getEmail());
 
         // 유효하지 않은 로그인 요청인 경우
-        if (member == null || !passwordEncoder.matches(postSignInReq.getPasswd(), member.getPasswd())) // 순서 중요
+        if (member == null || !passwordEncoder.matches(postSignInReq.getPasswd(), member.getPasswd())) {
+            System.out.println("로그인 성공!");
             return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
 
         MemberRes memberRes = MemberRes.builder()
                 .realName(member.getRealName())
@@ -170,6 +176,15 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         Member member = memberRepository.findMemberByEmail(principal.getName());
         MemberRes memberRes = memberService.changeStepGoal(member, patchChangeStepGoal.getStepGoal());
+        return ResponseEntity.status(HttpStatus.OK).body(memberRes);
+    }
+
+    @PatchMapping("/character")
+    public ResponseEntity<MemberRes> changeCharacter(@RequestBody PatchChangeCharacter patchChangeCharacter, Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Member member = memberRepository.findMemberByEmail(principal.getName());
+        MemberRes memberRes = memberService.changeCharacter(member, patchChangeCharacter.getCharId());
         return ResponseEntity.status(HttpStatus.OK).body(memberRes);
     }
 
