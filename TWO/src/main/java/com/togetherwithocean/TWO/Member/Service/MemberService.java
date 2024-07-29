@@ -297,4 +297,8 @@ public class MemberService {
         }
         statRepository.save(todayStat);
     }
+    public Long getPoint(String email) {
+        Member member = memberRepository.findMemberByEmail(email);
+        return member.getPoint();
+    }
 }

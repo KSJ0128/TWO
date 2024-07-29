@@ -224,6 +224,15 @@ public class MemberController {
         MyPageRes myPageInfo = memberService.getMyPageInfo(principal.getName());
         return ResponseEntity.status(HttpStatus.OK).body(myPageInfo);
     }
+
+    @GetMapping("/point")
+    public ResponseEntity<Long> getPoint(Authentication principal) {
+        if (principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getPoint(principal.getName()));
+    }
+
+
 //    @GetMapping("/test")
 //    public ResponseEntity<String> testToken() { return ResponseEntity.status(HttpStatus.OK).body(SecurityUtil.getCurrentEmail()); }
 }
