@@ -16,7 +16,12 @@
 </br>
 
 ## ERD
-<img width="997" alt="TWO_ERD" src="https://github.com/user-attachments/assets/01722c7f-78a2-40a0-b19d-ebcdb5578c20">
+<img width="900" alt="TWO_ERD" src="https://github.com/user-attachments/assets/01722c7f-78a2-40a0-b19d-ebcdb5578c20">
+</br>
+</br>
+
+## 시스템 구조도
+<img width="900" alt="TWO_SW아키텍처" src="https://github.com/user-attachments/assets/10dc317d-dbbd-4321-8f91-86d366301e9b">
 </br>
 </br>
 
